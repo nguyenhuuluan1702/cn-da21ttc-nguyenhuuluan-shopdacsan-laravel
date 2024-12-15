@@ -9,7 +9,7 @@
                         @endforeach
                         @foreach($brand_by_id as $key => $product)
 
-                        <div class="col-sm-4">
+                        <div class="col-md-3">
                             <div class="product-image-wrapper">
                            
                                 <div class="single-products">
@@ -47,7 +47,9 @@
                         </div>
                         </a>
                         @endforeach
+                    <div class="col-sm-12 text-center">
+                        {{ $brand_by_id->links('pagination::bootstrap-4') }}
+                    </div>
                     </div><!--features_items-->
-
         <!--/recommended_items-->
 @endsection

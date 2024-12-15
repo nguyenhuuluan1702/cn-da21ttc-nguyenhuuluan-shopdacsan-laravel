@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
+use App\Models\CateNews;
 use App\Models\Order;
 use App\Models\OrderDetails;
 use App\Models\Shipping;
@@ -86,6 +87,8 @@ class CheckoutController extends Controller
     }
 
     public function login_checkout(Request $request){
+
+        $category_news = CateNews::orderBy('cate_news_id', 'DESC')->get();
         //slide
        $slider = Slider::orderBy('slider_id','DESC')->where('slider_status','1')->take(4)->get();
 
@@ -99,10 +102,12 @@ class CheckoutController extends Controller
        $cate_product = DB::table('tbl_category_product')->where('category_status','0')->orderby('category_id','desc')->get();
        $brand_product = DB::table('tbl_brand')->where('brand_status','0')->orderby('brand_id','desc')->get(); 
 
-       return view('pages.checkout.login_checkout')->with('category',$cate_product)->with('brand',$brand_product)->with('slider',$slider);
+       return view('pages.checkout.login_checkout')->with('category',$cate_product)->with('brand',$brand_product)->with('slider',$slider)->with('category_news', $category_news);
    }
 
      public function checkout() {
+
+        $category_news = CateNews::orderBy('cate_news_id', 'DESC')->get();
 
         $slider = Slider::orderBy('slider_id','DESC')->where('slider_status','1')->take(4)->get();
 
@@ -110,7 +115,7 @@ class CheckoutController extends Controller
         $cate_product = DB::table('tbl_category_product')->where('category_status','0')->orderby('category_id','desc')->get();
        $brand_product = DB::table('tbl_brand')->where('brand_status','0')->orderby('brand_id','desc')->get(); 
 
-       return view('pages.checkout.show_checkout')->with('category',$cate_product)->with('brand',$brand_product)->with('slider',$slider);
+       return view('pages.checkout.show_checkout')->with('category',$cate_product)->with('brand',$brand_product)->with('slider',$slider)->with('category_news', $category_news);
     }
 
    public function add_customer(Request $request){

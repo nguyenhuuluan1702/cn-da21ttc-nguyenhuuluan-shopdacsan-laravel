@@ -11,9 +11,106 @@ use App\Models\OrderDetails;
 use App\Models\Shipping;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
 {
+
+	public function update_qty(Request $request){
+		$data = $request->all();
+		$order_details = OrderDetails::where('product_id',$data['order_product_id'])->where('order_code',$data['order_code'])->first();
+		$order_details->product_sales_quantity = $data['order_qty'];
+		$order_details->save();
+	}
+
+	// public function update_order_qty(Request $request){
+	// 	//update order
+	// 	$data = $request->all();
+	// 	$order = Order::find($data['order_id']);
+	// 	$order->order_status = $data['order_status'];
+	// 	$order->save();
+	// 	if($order->order_status==2){
+	// 		foreach($data['order_product_id'] as $key => $product_id){
+				
+	// 			$product = Product::find($product_id);
+	// 			$product_quantity = $product->product_quantity;
+	// 			$product_sold = $product->product_sold;
+	// 			foreach($data['quantity'] as $key2 => $qty){
+	// 					if($key==$key2){
+	// 							$pro_remain = $product_quantity - $qty;
+	// 							$product->product_quantity = $pro_remain;
+	// 							$product->product_sold = $product_sold + $qty;
+	// 							$product->save();
+	// 					}
+	// 			}
+	// 		}
+	// 	}elseif($order->order_status!=2 && $order->order_status!=3){
+	// 		foreach($data['order_product_id'] as $key => $product_id){
+				
+	// 			$product = Product::find($product_id);
+	// 			$product_quantity = $product->product_quantity;
+	// 			$product_sold = $product->product_sold;
+	// 			foreach($data['quantity'] as $key2 => $qty){
+	// 					if($key==$key2){
+	// 							$pro_remain = $product_quantity + $qty;
+	// 							$product->product_quantity = $pro_remain;
+	// 							$product->product_sold = $product_sold - $qty;
+	// 							$product->save();
+	// 					}
+	// 			}
+	// 		}
+	// 	}
+
+
+	// }
+	public function update_order_qty(Request $request)
+{
+    $data = $request->all();
+    $order = Order::find($data['order_id']);
+    $order->order_status = $data['order_status'];
+
+    if ($order->order_status == 2) {
+        foreach ($data['order_product_id'] as $key => $product_id) {
+            $product = Product::find($product_id);
+            $product_quantity = $product->product_quantity;
+            $product_sold = $product->product_sold;
+
+            // Kiểm tra số lượng tồn kho
+            if ($data['quantity'][$key] > $product_quantity) {
+                return response()->json(['error' => 'Số lượng mua lớn hơn số lượng tồn kho cho sản phẩm ID: ' . $product_id], 400);
+            }
+
+            // Nếu hợp lệ, cập nhật số lượng tồn kho
+            $pro_remain = $product_quantity - $data['quantity'][$key];
+            $product->product_quantity = $pro_remain;
+            $product->product_sold = $product_sold + $data['quantity'][$key];
+            $product->save();
+        }
+    } elseif ($order->order_status != 2 && $order->order_status != 3) {
+        foreach ($data['order_product_id'] as $key => $product_id) {
+            $product = Product::find($product_id);
+            $product_quantity = $product->product_quantity;
+            $product_sold = $product->product_sold;
+
+            $pro_remain = $product_quantity + $data['quantity'][$key];
+            $product->product_quantity = $pro_remain;
+            $product->product_sold = $product_sold - $data['quantity'][$key];
+            $product->save();
+        }
+    }
+
+    $order->save();
+    return response()->json(['success' => 'Cập nhật đơn hàng thành công']);
+}
+
+
+	public function order_code(Request $request ,$order_code){
+		$order = Order::where('order_code',$order_code)->first();
+		$order->delete();
+		 Session::put('message','Xóa đơn hàng thành công');
+        return redirect()->back();
+
+	}
 
 	public function print_order($checkout_code) {
         // Tạo file PDF từ nội dung HTML

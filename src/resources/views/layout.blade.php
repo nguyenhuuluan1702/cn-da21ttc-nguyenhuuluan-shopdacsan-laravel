@@ -29,6 +29,8 @@ use Illuminate\Support\Facades\Session;
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	
 	
 	
 </head><!--/head-->
@@ -95,7 +97,7 @@ use Illuminate\Support\Facades\Session;
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">
-								<li><a href="{{URL::to('/login-checkout')}}"><i class="fa fa-user"></i> Tài Khoản</a></li>
+								<li><a href="{{URL::to('/admin')}}"><i class="fa fa-user"></i> Admin</a></li>
 								<li><a href="#"><i class="fa fa-star"></i> Yêu thích</a></li>
 								<?php
                                    $customer_id = Session::get('customer_id');
@@ -148,22 +150,41 @@ use Illuminate\Support\Facades\Session;
 								<span class="icon-bar"></span>
 							</button>
 						</div>
+
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
 								<li><a href="{{URL::to('/trang-chu')}}" class="active">Trang chủ</a></li>
-								<li class="dropdown"><a href="#">Sản phẩm<i class="fa fa-angle-down"></i></a>
+								<li class="dropdown"><a href="#">Tin tức<i class="fa fa-angle-down"></i></a>	
                                     <ul role="menu" class="sub-menu">
-                                        <li><a href="shop.html">Products</a></li>
-										
+									@foreach($category_news as $key => $danhmuc)
+                                        <li><a href="{{URL::to('/danh-muc-bai-viet/'.$danhmuc->cate_news_id)}}">{{$danhmuc->cate_news_name}}</a></li>                                      
+                                    @endforeach
                                     </ul>
                                 </li> 
-								<li class="dropdown"><a href="#">Tin tức<i class="fa fa-angle-down"></i></a>
+								<!-- <li class="dropdown"><a href="#">Tin tức<i class="fa fa-angle-down"></i></a> -->
+
+								<li class="dropdown"><a href="#">Danh mục<i class="fa fa-angle-down"></i></a>	
+                                    <ul role="menu" class="sub-menu">
+									@foreach($category as $key => $cate)
+                                        <li><a href="{{URL::to('/danh-muc-san-pham/'.$cate->category_id)}}">{{$cate->category_name}}</a></li>                                      
+                                    @endforeach
+                                    </ul>
+                                </li> 
+
+								<li class="dropdown"><a href="#">Thương hiệu<i class="fa fa-angle-down"></i></a>	
+                                    <ul role="menu" class="sub-menu">
+									@foreach($brand as $key => $thuonghieu)
+                                        <li><a href="{{URL::to('/thuong-hieu-san-pham/'.$thuonghieu->brand_id)}}">{{$thuonghieu->brand_name}}</a></li>                                      
+                                    @endforeach
+                                    </ul>
+                                </li> 
                                     
                                 </li> 
-								<li><a href="{{URL::to('show-cart')}}">Giỏ hàng</a></li>
+								<li><a href="{{URL::to('gio-hang')}}">Giỏ hàng</a></li>
 								<li><a href="contact-us.html">Liên hệ</a></li>
 							</ul>
 						</div>
+
 					</div>
 					<div class="col-sm-4">
 						<form action="{{URL::to('/tim-kiem')}}" method="POST">
@@ -225,10 +246,10 @@ use Illuminate\Support\Facades\Session;
 	<section>
 		<div class="container">
 			<div class="row">
-				<div class="col-sm-3">
+				<!-- <div class="col-sm-3">
 					<div class="left-sidebar">
 						<h2>Danh mục sản phẩm</h2>
-						<div class="panel-group category-products" id="accordian"><!--category-productsr-->
+						<div class="panel-group category-products" id="accordian">
 						@foreach($category as $key => $cate)
 							<div class="panel panel-default">
 								<div class="panel-heading">
@@ -237,9 +258,9 @@ use Illuminate\Support\Facades\Session;
 							</div>
 						@endforeach
 						</div>
-						</div><!--/category-products-->
+						</div>
 					
-						<div class="brands_products"><!--brands_products-->
+						<div class="brands_products">
 							<h2>Thương hiệu sản phẩm</h2>
 							<div class="brands-name">
 								<ul class="nav nav-pills nav-stacked">
@@ -250,10 +271,9 @@ use Illuminate\Support\Facades\Session;
 							</div>
 						</div>
 
-					</div>
+				</div> -->
 				
-				
-				<div class="col-sm-9 padding-right">
+				<div class="col-sm-12 padding-right">
 					@yield('content')
 					
 				</div>
@@ -433,7 +453,7 @@ use Illuminate\Support\Facades\Session;
 <script src="/assets/frontend/js/sweetalert.min.js"></script>
 
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 	$(document).ready(function(){
 		
 		load_comment();
@@ -471,7 +491,185 @@ use Illuminate\Support\Facades\Session;
 
 	});
 
+</script> -->
+
+<!-- <script>
+    $(document).ready(function() {
+        $('#load-more').click(function() {
+            var button = $(this);
+            var offset = button.data('offset'); // Lấy giá trị offset hiện tại
+            var _token = $('input[name="_token"]').val(); // CSRF token Laravel
+
+            $.ajax({
+                url: '{{url("/load-more-products")}}', // Route xử lý AJAX
+                method: 'POST',
+                data: {offset: offset, _token: _token},
+                success: function(data) {
+                    if (data.length > 0) {
+                        // Duyệt qua sản phẩm và thêm vào danh sách
+                        $.each(data, function(index, product) {
+                            $('#product-list').append(`
+                                <div class="col-sm-4">
+                                    <div class="product-image-wrapper">
+                                        <div class="single-products">
+                                            <div class="productinfo text-center">
+                                                <a href="/chi-tiet-san-pham/${product.product_id}">
+                                                    <img src="/public/uploads/product/${product.product_image}" alt="" />
+                                                    <h2>${product.product_price.toLocaleString()} VNĐ</h2>
+                                                    <p>${product.product_name}</p>
+                                                </a>
+                                                <button class="btn btn-default add-to-cart">Thêm giỏ hàng</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        });
+
+                        // Cập nhật offset
+                        button.data('offset', offset + 6);
+                    } else {
+                        button.text('Không còn sản phẩm').attr('disabled', 'disabled');
+                    }
+                }
+            });
+        });
+    });
+</script> -->
+
+
+<script type="text/javascript">
+    function remove_background(product_id) {
+        for (var count = 1; count <= 5; count++) {
+            $('#' + product_id + '-' + count).css('color', '#ccc');
+        }
+    }
+
+    // Hover chuột đánh giá sao
+    $(document).on('mouseenter', '.rating', function() {
+        var index = $(this).data('index');
+        var product_id = $(this).data('product_id');
+        remove_background(product_id);
+        for (var count = 1; count <= index; count++) {
+            $('#' + product_id + '-' + count).css('color', '#ffcc00');
+        }
+    });
+
+    // Nhả chuột không đánh giá
+    $(document).on('mouseleave', '.rating', function() {
+        var index = $(this).data('index');
+        var product_id = $(this).data('product_id');
+        var rating = $(this).data('rating');
+        remove_background(product_id);
+        for (var count = 1; count <= rating; count++) {
+            $('#' + product_id + '-' + count).css('color', '#ffcc00');
+        }
+    });
+
+    // Click để đánh giá sao
+    $(document).on('click', '.rating', function() {
+        var index = $(this).data('index');
+        var product_id = $(this).data('product_id');
+        var _token = $('input[name="_token"]').val();
+
+        $.ajax({
+            url: "{{url('insert-rating')}}",
+            method: 'POST',
+            data: { index: index, product_id: product_id, _token: _token },
+            success: function(data) {
+                if (data == 'done') {
+                    swal({
+                        title: "Đánh giá thành công!",
+                        text: "Bạn đã đánh giá " + index + " trên 5 sao",
+                        type: "success",
+                        confirmButtonText: "OK"
+                    });
+                } else {
+                    swal({
+                        title: "Lỗi!",
+                        text: "Có lỗi xảy ra khi gửi đánh giá. Vui lòng thử lại.",
+                        type: "error",
+                        confirmButtonText: "OK"
+                    });
+                }
+            },        
+        });
+    });
 </script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Gọi hàm load_comment() để tải danh sách bình luận khi trang được tải
+        load_comment();
+
+        // Hàm tải bình luận
+        function load_comment() {
+            var product_id = $('.comment_product_id').val();
+            var _token = $('input[name="_token"]').val();
+
+            $.ajax({
+                url: "{{url('load-comment')}}",
+                method: "POST",
+                data: { product_id: product_id, _token: _token },
+                success: function (data) {
+                    $('#comment_show').html(data); // Hiển thị danh sách bình luận
+                },
+                error: function () {
+                    $('#comment_show').html('<p class="text-danger">Không thể tải bình luận, vui lòng thử lại!</p>');
+                }
+            });
+        }
+
+			$('.send-comment').click(function () {
+			var product_id = $('.comment_product_id').val();
+			var comment_name = $('.comment_name').val();
+			var comment_content = $('.comment_content').val();
+			var _token = $('input[name="_token"]').val();
+
+			// Kiểm tra dữ liệu hợp lệ
+			if (comment_name.trim() === '' || comment_content.trim() === '') {
+				$('#notify_comment').html('<span class="text text-danger">Vui lòng nhập đầy đủ thông tin!</span>');
+				return;
+			}
+
+			$.ajax({
+				url: "{{url('/send-comment')}}",
+				method: "POST",
+				data: {
+					product_id: product_id,
+					comment_name: comment_name,
+					comment_content: comment_content,
+					_token: _token
+				},
+				success: function (data) {
+					// Thông báo thêm bình luận thành công
+					$('#notify_comment')
+						.html('<span class="text text-success">Thêm bình luận thành công!</span>')
+						.fadeIn()
+						.delay(2000) // Hiển thị thông báo trong 2 giây
+						.fadeOut(); // Chỉ ẩn phần tử thông báo, không ảnh hưởng nút "Gửi bình luận"
+
+					// Gọi lại load_comment để cập nhật danh sách bình luận
+					load_comment();
+
+					// Làm sạch trường nhập liệu
+					$('.comment_name').val('');
+					$('.comment_content').val('');
+
+					$('.send-comment').css('visibility', 'visible'); // Hiển thị nút
+
+				},
+				error: function () {
+					$('#notify_comment').html('<span class="text text-danger">Không thể gửi bình luận, vui lòng thử lại!</span>');
+				}
+			});
+		});
+
+    });
+</script>
+
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -542,36 +740,42 @@ $(document).ready(function(){
             var cart_product_id = $('.cart_product_id_' + id).val();
             var cart_product_name = $('.cart_product_name_' + id).val();
             var cart_product_image = $('.cart_product_image_' + id).val();
+            var cart_product_quantity = $('.cart_product_quantity_' + id).val();
             var cart_product_price = $('.cart_product_price_' + id).val();
             var cart_product_qty = $('.cart_product_qty_' + id).val();
             var _token = $('input[name="_token"]').val();
-            $.ajax({
-                url: '{{ url("/add-cart-ajax") }}',
-                method: 'POST',
-                data: {
-                    cart_product_id: cart_product_id,
-                    cart_product_name: cart_product_name,
-                    cart_product_image: cart_product_image,
-                    cart_product_price: cart_product_price,
-                    cart_product_qty: cart_product_qty,
-                    _token: _token
-                },
-                success: function() {
-                    swal({
-                            title: "Đã thêm sản phẩm vào giỏ hàng",
-                            text: "Bạn có thể mua hàng tiếp hoặc tới giỏ hàng để tiến hành thanh toán",
-                            showCancelButton: true,
-                            cancelButtonText: "Xem tiếp",
-                            confirmButtonClass: "btn-success",
-                            confirmButtonText: "Đi đến giỏ hàng",
-                            closeOnConfirm: false
-                        },
-                        function() {
-                            window.location.href = "{{ url('/gio-hang') }}";
-                        }
-                    );
-                }
-            });
+			if(parseInt(cart_product_qty)>parseInt(cart_product_quantity)){
+				alert('Số lượng sản phẩm trong kho chỉ còn '+cart_product_quantity);
+			}else{
+					$.ajax({
+						url: '{{ url("/add-cart-ajax") }}',
+						method: 'POST',
+						data: {
+							cart_product_id: cart_product_id,
+							cart_product_name: cart_product_name,
+							cart_product_image: cart_product_image,
+							cart_product_price: cart_product_price,
+							cart_product_qty: cart_product_qty,
+							_token: _token,
+							cart_product_quantity: cart_product_quantity
+						},
+						success: function() {
+							swal({
+									title: "Đã thêm sản phẩm vào giỏ hàng",
+									text: "Bạn có thể mua hàng tiếp hoặc tới giỏ hàng để tiến hành thanh toán",
+									showCancelButton: true,
+									cancelButtonText: "Xem tiếp",
+									confirmButtonClass: "btn-success",
+									confirmButtonText: "Đi đến giỏ hàng",
+									closeOnConfirm: false
+								},
+								function() {
+									window.location.href = "{{ url('/gio-hang') }}";
+								}
+							);
+						}
+					});
+				}
         });
     });
 </script>

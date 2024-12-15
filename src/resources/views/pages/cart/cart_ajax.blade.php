@@ -10,21 +10,22 @@
 			</div>
             @if(session()->has('message'))
                     <div class="alert alert-success">
-                        {{ session()->get('message') }}
+                        {!! session()->get('message') !!}
                     </div>
                 @elseif(session()->has('error'))
                      <div class="alert alert-danger">
-                        {{ session()->get('error') }}
+                        {!! session()->get('error') !!}
                     </div>
                 @endif
 			<div class="table-responsive cart_info">
 				<form action="{{url('/update-cart')}}" method="POST">
                     @csrf
-				<table class="table table-condensed">
+				<table style="width: 100%;" class="table table-condensed">
 					<thead>
 						<tr class="cart_menu">
 							<td class="image">Sản phẩm</td>
 							<td class="description">Tên sản phẩm</td>
+							<td class="description">Số lượng hàng trong kho</td>
 							<td class="price">Giá</td>
 							<td class="quantity">Số lượng</td>
 							<td class="total">Thành tiền</td>
@@ -49,6 +50,11 @@
 							<td class="cart_description">
 								<h4><a href=""></a></h4>
                                 <p>{{$cart['product_name']}}</p>
+
+							</td>
+							<td class="cart_description">
+								<h4><a href=""></a></h4>
+                                <p>{{$cart['product_quantity']}}</p>
 
 							</td>
 							<td class="cart_price">

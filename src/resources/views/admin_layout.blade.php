@@ -29,6 +29,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!-- //calendar -->
 <!-- //font-awesome icons -->
 <script src="/assets/backend/js/jquery2.0.3.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/assets/backend/js/raphael-min.js"></script>
 <script src="/assets/backend/js/morris.js"></script>
 </head>
@@ -50,9 +51,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <div class="top-nav clearfix">
     <!--search & user info start-->
     <ul class="nav pull-right top-menu">
-        <li>
+        <!-- <li>
             <input type="text" class="form-control search" placeholder=" Search">
-        </li>
+        </li> -->
         <!-- user login dropdown start-->
         <li class="dropdown">
             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -151,6 +152,30 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                     </ul>
                 </li>
 
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class="fa fa-book"></i>
+                        <span>Danh mục bài viết</span>
+                    </a>
+                    <ul class="sub">
+						<li><a href="{{URL::to('/add-category-news')}}">Thêm danh mục bài viết</a></li>
+						<li><a href="{{URL::to('/all-category-news')}}">Liệt kê danh mục bài viết</a></li>
+                      
+                    </ul>
+                </li>
+
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class="fa fa-book"></i>
+                        <span>Bài viết</span>
+                    </a>
+                    <ul class="sub">
+						<li><a href="{{URL::to('/add-news')}}">Thêm bài viết</a></li>
+						<li><a href="{{URL::to('/all-news')}}">Liệt kê bài viết</a></li>
+                      
+                    </ul>
+                </li>
+
 				<li class="sub-menu">
                     <a href="javascript:;">
                         <i class="fa fa-book"></i>
@@ -184,12 +209,23 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 </section>
 <!--main content end-->
 </section>
-<script src="assets/backend/js/bootstrap.js"></script>
-<script src="assets/backend/js/jquery.dcjqaccordion.2.7.js"></script>
-<script src="assets/backend/js/scripts.js"></script>
-<script src="assets/backend/js/jquery.slimscroll.js"></script>
-<script src="assets/backend/js/jquery.nicescroll.js"></script>
+<script src="/assets/backend/js/bootstrap.js"></script>
+<script src="/assets/backend/js/jquery.dcjqaccordion.2.7.js"></script>
+<script src="/assets/backend/js/scripts.js"></script>
+<script src="/assets/backend/js/jquery.slimscroll.js"></script>
+<script src="/assets/backend/js/jquery.nicescroll.js"></script>
+<script src="/assets/backend/js/jquery.scrollTo.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.36/jquery.form-validator.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.21.0/full/ckeditor.js"></script>
+
+    <script>
+        // Khởi tạo CKEditor
+        CKEDITOR.replace('editor');
+        CKEDITOR.replace('editor1');
+        CKEDITOR.replace('editor2');
+        CKEDITOR.replace('editor3');
+    </script>
+
 <script type="text/javascript">
 		$.validate({
 
@@ -197,8 +233,142 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 </script>
 
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/flot-chart/excanvas.min.js"></script><![endif]-->
-<script src="js/jquery.scrollTo.js"></script>
 <!-- morris JavaScript -->	
+
+
+
+<script type="text/javascript">
+    $('.update_quantity_order').click(function(){
+        var order_product_id = $(this).data('product_id');
+        var order_qty = $('.order_qty_'+order_product_id).val();
+        var order_code = $('.order_code').val();
+        var _token = $('input[name="_token"]').val();
+        // alert(order_product_id);
+        // alert(order_qty);
+        // alert(order_code);
+        $.ajax({
+                url : '{{url("/update-qty")}}',
+
+                method: 'POST',
+
+                data:{_token:_token, order_product_id:order_product_id ,order_qty:order_qty ,order_code:order_code},
+                // dataType:"JSON",
+                success:function(data){
+
+                    alert('Cập nhật số lượng thành công');
+                 
+                   location.reload();
+                    
+                }
+        });
+
+    });
+</script>
+
+<!-- <script type="text/javascript">
+    $('.order_details').change(function(){
+        var order_status = $(this).val();
+        var order_id = $(this).children(":selected").attr("id");
+        var _token = $('input[name="_token"]').val();
+
+        //lay ra so luong
+        quantity = [];
+        $("input[name='product_sales_quantity']").each(function(){
+            quantity.push($(this).val());
+        });
+        //lay ra product id
+        order_product_id = [];
+        $("input[name='order_product_id']").each(function(){
+            order_product_id.push($(this).val());
+        });
+        j = 0;
+        for(i=0;i<order_product_id.length;i++){
+            //so luong khach dat
+            var order_qty = $('.order_qty_' + order_product_id[i]).val();
+            //so luong ton kho
+            var order_qty_storage = $('.order_qty_storage_' + order_product_id[i]).val();
+
+            if(parseInt(order_qty)>parseInt(order_qty_storage)){
+                j = j + 1;
+                if(j==1){
+                    alert('Số lượng bán trong kho không đủ');
+                }
+                $('.color_qty_'+order_product_id[i]).css('background','#000');
+            }
+        }
+        if(j==0){
+          
+                $.ajax({
+                        url : '{{url("/update-order-qty")}}',
+                            method: 'POST',
+                            data:{_token:_token, order_status:order_status ,order_id:order_id ,quantity:quantity, order_product_id:order_product_id},
+                            success:function(data){
+                                alert('Thay đổi tình trạng đơn hàng thành công');
+                                location.reload();
+                            }
+                });
+            
+        }
+
+    });
+</script> -->
+<script type="text/javascript">
+		$('.order_details').change(function () {
+    var order_status = $(this).val();
+    var order_id = $(this).children(":selected").attr("id");
+    var _token = $('input[name="_token"]').val();
+
+    // Lấy ra số lượng khách đặt
+    quantity = [];
+    $("input[name='product_sales_quantity']").each(function () {
+        quantity.push($(this).val());
+    });
+
+    // Lấy ra product_id
+    order_product_id = [];
+    $("input[name='order_product_id']").each(function () {
+        order_product_id.push($(this).val());
+    });
+
+    // Biến đếm lỗi
+    var errorFlag = false;
+
+    for (let i = 0; i < order_product_id.length; i++) {
+        var order_qty = parseInt($('.order_qty_' + order_product_id[i]).val());
+        var order_qty_storage = parseInt($('.order_qty_stronge_' + order_product_id[i]).val());
+
+        if (order_qty > order_qty_storage) {
+            alert('Số lượng mua lớn hơn số lượng trong kho');
+            $('.color_qty_' + order_product_id[i]).css('background', '#f8d7da'); // Đổi màu để thông báo lỗi
+            errorFlag = true;
+        }
+    }
+
+    // Nếu không có lỗi thì gửi AJAX
+    if (!errorFlag) {
+        $.ajax({
+            url: '{{url("/update-order-qty")}}',
+            method: 'POST',
+            data: {
+                _token: _token,
+                order_status: order_status,
+                order_id: order_id,
+                quantity: quantity,
+                order_product_id: order_product_id
+            },
+            success: function (data) {
+                alert('Thay đổi tình trạng đơn hàng thành công');
+                location.reload();
+            },
+            error: function () {
+                alert('Đã xảy ra lỗi khi cập nhật đơn hàng');
+            }
+        });
+    }
+});
+
+</script>
+
 <script>
 	$(document).ready(function() {
 		//BOX BUTTON SHOW AND CLOSE

@@ -28,6 +28,11 @@ Route::get('/danh-muc-san-pham/{category_id}','App\Http\Controllers\CategoryProd
 Route::get('/thuong-hieu-san-pham/{brand_id}','App\Http\Controllers\BrandProduct@show_brand_home');
 Route::get('/chi-tiet-san-pham/{product_id}','App\Http\Controllers\ProductController@details_product');
 
+//Bài viết
+Route::get('/danh-muc-bai-viet/{news_id}','App\Http\Controllers\NewsController@danh_muc_bai_viet');
+Route::get('/bai-viet/{news_id}','App\Http\Controllers\NewsController@bai_viet');
+
+
 //Backend
 Route::get('/admin', 'App\Http\Controllers\AdminController@index');
 Route::get('/dashboard', 'App\Http\Controllers\AdminController@show_dashboard');
@@ -56,6 +61,25 @@ Route::post('/update-brand-product/{brand_product_id}', 'App\Http\Controllers\Br
 Route::get('/unactive-brand-product/{brand_product_id}', 'App\Http\Controllers\BrandProduct@unactive_brand_product');
 Route::get('/active-brand-product/{brand_product_id}', 'App\Http\Controllers\BrandProduct@active_brand_product');
 
+//Category News
+Route::get('/add-category-news', 'App\Http\Controllers\CategoryNews@add_category_news');
+Route::get('/all-category-news', 'App\Http\Controllers\CategoryNews@all_category_news');
+Route::get('/edit-category-news/{category_news_id}', 'App\Http\Controllers\CategoryNews@edit_category_news');
+Route::get('/delete-category-news/{category_news_id}', 'App\Http\Controllers\CategoryNews@delete_category_news');
+Route::get('/unactive-category-news/{category_news_id}', 'App\Http\Controllers\CategoryNews@unactive_category_news');
+Route::get('/active-category-news/{category_news_id}', 'App\Http\Controllers\CategoryNews@active_category_news');
+Route::post('/save-category-news', 'App\Http\Controllers\CategoryNews@save_category_news');
+Route::post('/update-category-news/{category_news_id}', 'App\Http\Controllers\CategoryNews@update_category_news');
+
+//News
+Route::get('/add-news', 'App\Http\Controllers\NewsController@add_news');
+Route::get('/all-news', 'App\Http\Controllers\NewsController@all_news');
+Route::get('/delete-news/{news_id}', 'App\Http\Controllers\NewsController@delete_news');
+Route::get('/edit-news/{news_id}', 'App\Http\Controllers\NewsController@edit_news');
+Route::post('/save-news', 'App\Http\Controllers\NewsController@save_news');
+Route::post('/update-news/{news_id}', 'App\Http\Controllers\NewsController@update_news');
+
+
 //Product
 Route::get('/add-product', 'App\Http\Controllers\ProductController@add_product');
 Route::get('/edit-product/{product_id}', 'App\Http\Controllers\ProductController@edit_product');
@@ -65,6 +89,7 @@ Route::post('/save-product', 'App\Http\Controllers\ProductController@save_produc
 Route::post('/update-product/{product_id}', 'App\Http\Controllers\ProductController@update_product');
 Route::post('/load-comment', 'App\Http\Controllers\ProductController@load_comment');
 Route::post('/send-comment', 'App\Http\Controllers\ProductController@send_comment');
+Route::post('/insert-rating', 'App\Http\Controllers\ProductController@insert_rating');
 
 Route::get('/unactive-product/{product_id}', 'App\Http\Controllers\ProductController@unactive_product');
 Route::get('/active-product/{product_id}', 'App\Http\Controllers\ProductController@active_product');
@@ -104,6 +129,9 @@ Route::post('/confirm-order','App\Http\Controllers\CheckoutController@confirm_or
 Route::get('/manage-order','App\Http\Controllers\OrderController@manage_order');
 Route::get('/print-order/{checkout_code}','App\Http\Controllers\OrderController@print_order');
 Route::get('/view-order/{order_code}','App\Http\Controllers\OrderController@view_order');
+Route::get('/delete-order/{order_code}','App\Http\Controllers\OrderController@order_code');
+Route::post('/update-order-qty','App\Http\Controllers\OrderController@update_order_qty');
+Route::post('/update-qty','App\Http\Controllers\OrderController@update_qty');
 
 //Banner
 Route::get('/manage-slider','App\Http\Controllers\SliderController@manage_slider');
@@ -112,3 +140,5 @@ Route::post('/insert-slider','App\Http\Controllers\SliderController@insert_slide
 Route::get('/unactive-slide/{slide_id}','App\Http\Controllers\SliderController@unactive_slide');
 Route::get('/active-slide/{slide_id}','App\Http\Controllers\SliderController@active_slide');
 
+//Xử lí xem thêm sản phẩm
+Route::post('/load-more-products', 'App\Http\Controllers\HomeController@loadMoreProducts');

@@ -37,7 +37,7 @@
                                     <label for="exampleInputEmail1">Giá sản phẩm</label>
                                     <input type="text" data-validation="number" data-validation-error-msg="Vui lòng nhập số tiền" name="product_price" class="form-control" id="" placeholder="Tên danh mục">
                                 </div>
-                                  <div class="form-group">
+                                <div class="form-group">
                                     <label for="exampleInputEmail1">Hình ảnh sản phẩm</label>
                                     <input type="file" name="product_image" class="form-control" id="exampleInputEmail1" data-validation="required" 
                                     data-validation-error-msg="Vui lòng chọn hình ảnh sản phẩm">
@@ -48,7 +48,7 @@
                                 </div>
                                  <div class="form-group">
                                     <label for="exampleInputPassword1">Nội dung sản phẩm</label>
-                                    <textarea style="resize: none" rows="8" class="form-control" data-validation="length" data-validation-length="min1" data-validation-error-msg="Vui lòng nhập nội dung sản phẩm" name="product_content"  id="id4" placeholder="Nội dung sản phẩm"></textarea>
+                                    <textarea style="resize: none" rows="8" class="form-control" data-validation="length" data-validation-length="min1" data-validation-error-msg="Vui lòng nhập nội dung sản phẩm" name="product_content"  id="editor3" placeholder="Nội dung sản phẩm"></textarea>
                                 </div>
                                  <div class="form-group">
                                     <label for="exampleInputPassword1">Danh mục sản phẩm</label>

@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
+use App\Models\CateNews;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Contracts\Session\Session as SessionSession;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use App\Models\Coupon;
 use App\Models\Slider;
+use GuzzleHttp\Psr7\Message;
 
 session_start();
 
@@ -54,6 +56,8 @@ class CartController extends Controller
     }  
 
     public function gio_hang(Request $request){
+
+    $category_news = CateNews::orderBy('cate_news_id', 'DESC')->get();
         //seo 
         //slide
     $slider = Slider::orderBy('slider_id','DESC')->where('slider_status','1')->take(4)->get();
@@ -66,7 +70,7 @@ class CartController extends Controller
        $cate_product = DB::table('tbl_category_product')->where('category_status','0')->orderby('category_id','desc')->get(); 
        $brand_product = DB::table('tbl_brand')->where('brand_status','0')->orderby('brand_id','desc')->get(); 
 
-       return view('pages.cart.cart_ajax')->with('category',$cate_product)->with('brand',$brand_product)->with('slider',$slider);
+       return view('pages.cart.cart_ajax')->with('category',$cate_product)->with('brand',$brand_product)->with('slider',$slider)->with('category_news', $category_news);
    }
 
     public function add_cart_ajax(Request $request){
@@ -87,6 +91,7 @@ class CartController extends Controller
                 'product_name' => $data['cart_product_name'],
                 'product_id' => $data['cart_product_id'],
                 'product_image' => $data['cart_product_image'],
+                'product_quantity' => $data['cart_product_quantity'],
                 'product_qty' => $data['cart_product_qty'],
                 'product_price' => $data['cart_product_price'],
                 );
@@ -98,6 +103,7 @@ class CartController extends Controller
                 'product_name' => $data['cart_product_name'],
                 'product_id' => $data['cart_product_id'],
                 'product_image' => $data['cart_product_image'],
+                'product_quantity' => $data['cart_product_quantity'],
                 'product_qty' => $data['cart_product_qty'],
                 'product_price' => $data['cart_product_price'],
 
@@ -126,11 +132,14 @@ class CartController extends Controller
     }
 
     public function show_cart(){
+
+        $slider = Slider::orderBy('slider_id','DESC')->where('slider_status','1')->take(4)->get();
+
        
         $cate_product = DB::table('tbl_category_product')->where('category_status','0')->orderby('category_id','desc')->get(); 
         $brand_product = DB::table('tbl_brand')->where('brand_status','0')->orderby('brand_id','desc')->get(); 
 
-        return view('pages.cart.show_cart')->with('category',$cate_product)->with('brand',$brand_product);
+        return view('pages.cart.show_cart')->with('category',$cate_product)->with('brand',$brand_product)->with('slider',$slider);
 
     }
 
@@ -180,15 +189,22 @@ class CartController extends Controller
         $data = $request->all();
         $cart = Session::get('cart');
         if($cart==true){
+            $message = '';
+
             foreach($data['cart_qty'] as $key => $qty){
+                $i = 0;
                 foreach($cart as $session => $val){
-                    if($val['session_id']==$key){
+                    $i++;
+                    if($val['session_id']==$key && $qty<=$cart[$session]['product_quantity']){
                         $cart[$session]['product_qty'] = $qty;
+                        $message.='<p style="color:green">'.$i.'/. Cập nhật số lượng '.$cart[$session]['product_name'].' thành công</p>';
+                    }elseif($val['session_id']==$key && $qty>$cart[$session]['product_quantity']){
+                        $message.='<p style="color:red">'.$i.'/. Số lượng '.$cart[$session]['product_name'].' trong kho không đủ</p>';
                     }
                 }
             }
             Session::put('cart',$cart);
-            return redirect()->back()->with('message','Cập nhật số lượng thành công');
+            return redirect()->back()->with('message',$message);
         }else{
             return redirect()->back()->with('message','Cập nhật số lượng thất bại');
         }

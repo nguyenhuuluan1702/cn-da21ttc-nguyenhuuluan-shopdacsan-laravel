@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
+use App\Models\CateNews;
 use App\Models\Comment;
+use App\Models\Rating;
 use App\Models\Slider;
 use Illuminate\Contracts\Session\Session as SessionSession;
 use Illuminate\Support\Facades\Redirect;
@@ -174,6 +176,8 @@ class ProductController extends Controller
 
     public function details_product($product_id){
 
+        $category_news = CateNews::orderBy('cate_news_id', 'DESC')->get();
+
         $slider = Slider::orderBy('slider_id','DESC')->where('slider_status','1')->take(4)->get();
 
         $cate_product = DB::table('tbl_category_product')->where('category_status','0')->orderby('category_id','desc')->get(); 
@@ -193,7 +197,20 @@ class ProductController extends Controller
         ->join('tbl_brand','tbl_brand.brand_id','=','tbl_product.brand_id')
         ->where('tbl_category_product.category_id',$category_id)->whereNotIn('tbl_product.product_id',[$product_id])->get();
 
+        $rating = Rating::where('product_id',$product_id)->avg('rating');
+        $rating = round($rating);
+
         return view('pages.sanpham.show_details')->with('category',$cate_product)->with('brand',$brand_product)
-        ->with('product_details',$details_product)->with('relate',$related_product)->with('slider',$slider);
+        ->with('product_details',$details_product)->with('relate',$related_product)->with('slider',$slider)->with('rating',$rating)->with('category_news', $category_news);
     }
+
+    public function insert_rating(Request $request) {
+        $data = $request->all();
+        $rating = new Rating();
+        $rating->product_id = $data['product_id'];
+        $rating->rating = $data['index'];
+        $rating->save();
+        echo 'done';
+    }
+    
 }

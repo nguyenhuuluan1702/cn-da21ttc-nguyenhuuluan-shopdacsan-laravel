@@ -53,11 +53,11 @@
 					<div class="col-sm-12 clearfix">
 						@if(session()->has('message'))
 							<div class="alert alert-success">
-								{{ session()->get('message') }}
+								{!! session()->get('message')!!}
 							</div>
 						@elseif(session()->has('error'))
 							<div class="alert alert-danger">
-								{{ session()->get('error') }}
+								{!! session()->get('error') !!}
 							</div>
 						@endif
 						<div class="table-responsive cart_info">

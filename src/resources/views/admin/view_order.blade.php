@@ -124,6 +124,7 @@ use Illuminate\Support\Facades\Session;
               </label>
             </th>
             <th>Tên sản phẩm</th>
+            <th>Số lượng kho</th>
             <th>Số lượng</th>
             <th>Mã giảm giá</th>
             <th>Giá sản phẩm</th>
@@ -148,7 +149,23 @@ use Illuminate\Support\Facades\Session;
            
             <td><i>{{$i}}</i></td>
             <td>{{$details->product_name}}</td>
-            <td>{{$details->product_sales_quantity}}</td>
+            <td>{{$details->product->product_quantity}}</td>
+            <td>
+              <input type="number" min="1" {{$order_status==2 ? 'disabled' : ''}} class="order_qty_{{$details->product_id}}" value="{{$details->product_sales_quantity}}" name="product_sales_quantity">
+              
+              <input type="hidden" name="order_qty_stronge" class="order_qty_stronge_{{$details->product_id}}" value="{{$details->product->product_quantity}}">
+              
+              <input type="hidden" name="order_code" class="order_code" value="{{$details->order_code}}">
+              
+              <input type="hidden" name="order_product_id" class="order_product_id" value="{{$details->product_id}}">
+              
+              @if($order_status!=2)
+
+              <button class="btn btn-default update_quantity_order" data-product_id="{{$details->product_id}}" name="update_quantity_order">Cập nhật</button>
+
+              @endif
+              
+            </td>
             <td>@if($details->product_coupon!='no')
                   {{$details->product_coupon}}
                 @else 
@@ -172,6 +189,7 @@ use Illuminate\Support\Facades\Session;
             @endif
 
             </td> -->
+            
             <td>{{number_format($details->product_price ,0,',','.')}}đ</td>
             <td>{{number_format($subtotal ,0,',','.')}}đ</td>
           </tr>
@@ -205,7 +223,7 @@ use Illuminate\Support\Facades\Session;
                 <form>
                    @csrf
                   <select class="form-control order_details">
-                    <option value="">----Chọn hình thức đơn hàng-----</option>
+                    <option value="">----Cập nhật tình trạng đơn hàng-----</option>
                     <option id="{{$or->order_id}}" selected value="1">Chưa xử lý</option>
                     <option id="{{$or->order_id}}" value="2">Đã xử lý-Đã giao hàng</option>
                     <option id="{{$or->order_id}}" value="3">Hủy đơn hàng-tạm giữ</option>
@@ -215,7 +233,7 @@ use Illuminate\Support\Facades\Session;
                 <form>
                   @csrf
                   <select class="form-control order_details">
-                    <option value="">----Chọn hình thức đơn hàng-----</option>
+                    <option value="">----Cập nhật tình trạng đơn hàng-----</option>
                     <option id="{{$or->order_id}}" value="1">Chưa xử lý</option>
                     <option id="{{$or->order_id}}" selected value="2">Đã xử lý-Đã giao hàng</option>
                     <option id="{{$or->order_id}}" value="3">Hủy đơn hàng-tạm giữ</option>
@@ -226,7 +244,7 @@ use Illuminate\Support\Facades\Session;
                 <form>
                    @csrf
                   <select class="form-control order_details">
-                    <option value="">----Chọn hình thức đơn hàng-----</option>
+                    <option value="">----Cập nhật tình trạng đơn hàng-----</option>
                     <option id="{{$or->order_id}}" value="1">Chưa xử lý</option>
                     <option id="{{$or->order_id}}"  value="2">Đã xử lý-Đã giao hàng</option>
                     <option id="{{$or->order_id}}" selected value="3">Hủy đơn hàng-tạm giữ</option>
