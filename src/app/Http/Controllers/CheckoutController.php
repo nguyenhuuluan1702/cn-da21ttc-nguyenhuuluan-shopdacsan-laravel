@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\OrderDetails;
 use App\Models\Shipping;
 use App\Models\Slider;
+use Carbon\Carbon;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Contracts\Session\Session as SessionSession;
 use Illuminate\Support\Facades\Redirect;
@@ -43,8 +44,11 @@ class CheckoutController extends Controller
         $order->order_status = 1;
         $order->order_code = $checkout_code;
 
+        $order_date = Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');
+
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         $order->created_at = now();
+        $order->order_date = $order_date;
         $order->save();
 
         if(Session::get('cart')==true){

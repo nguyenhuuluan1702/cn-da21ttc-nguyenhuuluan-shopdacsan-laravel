@@ -60,7 +60,7 @@
             <td>{{ $news->news_title }}</td>        
             <td><img src="public/uploads/news/{{ $news->news_image }}" height="100" width="100"></td>
             <td>{!! $news->news_desc !!}</td>
-            <td>{{ $news->cate_news->cate_news_name }}</td>
+            <td>{!! $news->cate_news->cate_news_name !!}</td>
 
             <td>
                 @if($news->news_status == 0)

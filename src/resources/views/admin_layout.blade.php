@@ -30,8 +30,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!-- //font-awesome icons -->
 <script src="/assets/backend/js/jquery2.0.3.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/assets/backend/js/raphael-min.js"></script>
 <script src="/assets/backend/js/morris.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 </head>
 <body>
 <section id="container">
@@ -217,6 +221,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <script src="/assets/backend/js/jquery.scrollTo.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.36/jquery.form-validator.min.js"></script>
 <script src="https://cdn.ckeditor.com/4.21.0/full/ckeditor.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 
     <script>
         // Khởi tạo CKEditor
@@ -235,6 +241,124 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/flot-chart/excanvas.min.js"></script><![endif]-->
 <!-- morris JavaScript -->	
 
+<script type="text/javascript">
+$(function() {
+    $("#datepicker").datepicker({
+        prevText: "Tháng trước",
+        nextText: "Tháng sau",
+        dateFormat: "yy-mm-dd",
+        dayNamesMin: [ "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật" ],
+        duration: "slow"
+    });
+    $("#datepicker2").datepicker({
+        prevText: "Tháng trước",
+        nextText: "Tháng sau",
+        dateFormat: "yy-mm-dd",
+        dayNamesMin: [ "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật" ],
+        duration: "slow"
+    });
+});
+</script>
+
+<script type="text/javascript">
+   $(document).ready(function() {
+
+        chart30daysorder();
+
+            var chart = new Morris.Bar({
+            // ID của phần tử để vẽ biểu đồ.
+            element: 'myfirstchart',
+            // Dữ liệu biểu đồ - mỗi mục trong mảng này tương ứng với một điểm trên biểu đồ.
+            // data: [
+            //     {"period":"2024-11-31","order":1},
+            //     {"period":"2024-12-01","order":1},
+            //     {"period":"2024-12-07","order":6}
+            // ],
+            lineColors: ['#819C79', '#fc8710', '#FF6541', '#A4ADD3', '#766B56'],
+            // pointFillColors: ['#ffffff'],
+            // pointStrokeColors: ['black'],
+            // fillOpacity: 0.6,
+            parseTime: false,
+            hideHover: 'auto',
+            // Tên của thuộc tính dữ liệu chứa giá trị x.
+            xkey: 'period',
+            // Danh sách tên của các thuộc tính dữ liệu chứa giá trị y.
+            ykeys: ['order', 'sales', 'profit', 'quantity'],
+            //behaveLikeLine: true,
+            // Nhãn cho các ykeys - sẽ hiển thị khi di chuột qua biểu đồ.
+            labels: ['đơn hàng', 'doanh số', 'lợi nhuận', 'số lượng']
+        });
+
+                function chart30daysorder() {
+                var _token = $('input[name="_token"]').val();
+                $.ajax({
+                    url: "{{url('/days-order')}}",
+                    method: "POST",
+                    dataType: "JSON",
+                    data: {_token: _token},
+                    success: function(data) {
+                        chart.setData(data);
+                    }
+                });
+            }
+
+            $('.dashboard-filter').change(function() {
+                var dashboard_value = $(this).val();
+                var _token = $('input[name="_token"]').val();
+                $.ajax({
+                    url: "{{url('/dashboard-filter')}}",
+                    method: "POST",
+                    dataType: "JSON",
+                    data: {dashboard_value: dashboard_value, _token: _token},
+                    success: function(data) {
+                        chart.setData(data);
+                }
+            });
+        });
+
+    $('#btn-dashboard-filter').click(function() {
+        var _token = $('input[name="_token"]').val();
+        var from_date = $('#datepicker').val();
+        var to_date = $('#datepicker2').val();
+        
+        $.ajax({
+            url: "{{url('/filter-by-date')}}",
+            method: "POST",
+            dataType: "JSON",
+            data: {from_date: from_date, to_date: to_date, _token: _token},
+            success: function(data) {
+                chart.setData(data);
+            }
+        });
+    });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+    var donut = Morris.Donut({
+        element: 'donut',
+        resize: false,
+        colors: [
+            '#ce616a',
+            '#61a1ce',
+            '#cebf61',
+            '#f5b942',      
+            '#4842f5'
+        ],
+        //labelColor: "#cccccc", // text color
+        //backgroundColor: '#333333', // border color
+        data: [
+            {label: "Sản phẩm", value: <?php echo $product_dem ?>},
+            {label: "Bài viết", value: <?php echo $news_dem ?>},
+            {label: "Đơn hàng", value: <?php echo $order_dem ?>},
+            {label: "Khách hàng", value: <?php echo $customer_dem ?>}
+        ]
+    });
+});
+</script>
 
 
 <script type="text/javascript">
@@ -312,6 +436,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
     });
 </script> -->
+
 <script type="text/javascript">
 		$('.order_details').change(function () {
     var order_status = $(this).val();

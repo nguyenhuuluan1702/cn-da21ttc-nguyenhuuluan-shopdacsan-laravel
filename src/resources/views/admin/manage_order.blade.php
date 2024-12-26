@@ -45,10 +45,11 @@
             <td><i>{{$i}}</i></label></td>
             <td>{{ $ord->order_code }}</td>
             <td>{{ $ord->created_at }}</td>
+
             <td>@if($ord->order_status==1)
                     Đơn hàng mới
                 @else 
-                    Đã xử lý
+                    Đã xử lý - Đã giao hàng
                 @endif
             </td>
            

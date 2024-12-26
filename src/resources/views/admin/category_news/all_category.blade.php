@@ -46,6 +46,7 @@
               </label>
             </th>
             <th>Tên danh mục bài viết</th>
+            <th>Slug</th>
             <th>Mô tả danh mục bài viết</th>
             <th>Hiển thị</th>
             
@@ -53,30 +54,31 @@
           </tr>
         </thead>
         <tbody>
-          @foreach($all_category_news as $key => $news)
+          @foreach($category_news as $key => $cate_news)
           <tr>
             <td><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
-            <td>{{ $news->cate_news_name }}</td>
-            <td>{{ $news->cate_news_desc }}</td>
+            <td>{{ $cate_news->cate_news_name }}</td>
+            <td>{{ $cate_news->cate_news_slug }}</td>
+            <td>{{ $cate_news->cate_news_desc }}</td>
           
             <td><span class="text-ellipsis">
               <?php
-               if($news->cate_news_status==0){
+               if($cate_news->cate_news_status==0){
                 ?>
-                <a href="{{URL::to('/unactive-category-news/'.$news->cate_news_id)}}"><span class="fa-thumb-styling fa fa-thumbs-up"></span></a>
+                <a href="{{URL::to('/unactive-category-news/'.$cate_news->cate_news_id)}}"><span class="fa-thumb-styling fa fa-thumbs-up"></span></a>
                 <?php
                  }else{
                 ?>  
-                 <a href="{{URL::to('/active-category-news/'.$news->cate_news_id)}}"><span class="fa-thumb-styling fa fa-thumbs-down"></span></a>
+                 <a href="{{URL::to('/active-category-news/'.$cate_news->cate_news_id)}}"><span class="fa-thumb-styling fa fa-thumbs-down"></span></a>
                 <?php
                }
               ?>
             </span></td>
            
             <td>
-              <a href="{{URL::to('/edit-category-news/'.$news->cate_news_id)}}" class="active styling-edit" ui-toggle-class="">
+              <a href="{{URL::to('/edit-category-news/'.$cate_news->cate_news_id)}}" class="active styling-edit" ui-toggle-class="">
                 <i class="fa fa-pencil-square-o text-success text-active"></i></a>
-              <a onclick="return confirm('Bạn có chắc là muốn xóa danh mục này ko?')" href="{{URL::to('/delete-category-news/'.$news->cate_news_id)}}" class="active styling-edit" ui-toggle-class="">
+              <a onclick="return confirm('Bạn có chắc là muốn xóa danh mục này ko?')" href="{{URL::to('/delete-category-news/'.$cate_news->cate_news_id)}}" class="active styling-edit" ui-toggle-class="">
                 <i class="fa fa-times text-danger text"></i>
               </a>
             </td>

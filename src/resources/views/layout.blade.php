@@ -156,8 +156,8 @@ use Illuminate\Support\Facades\Session;
 								<li><a href="{{URL::to('/trang-chu')}}" class="active">Trang chủ</a></li>
 								<li class="dropdown"><a href="#">Tin tức<i class="fa fa-angle-down"></i></a>	
                                     <ul role="menu" class="sub-menu">
-									@foreach($category_news as $key => $danhmuc)
-                                        <li><a href="{{URL::to('/danh-muc-bai-viet/'.$danhmuc->cate_news_id)}}">{{$danhmuc->cate_news_name}}</a></li>                                      
+									@foreach($category_news as $key => $danhmucbaiviet)
+                                        <li><a href="{{URL::to('/danh-muc-bai-viet/'.$danhmucbaiviet->cate_news_slug)}}">{{$danhmucbaiviet->cate_news_name}}</a></li>                                      
                                     @endforeach
                                     </ul>
                                 </li> 
@@ -451,6 +451,9 @@ use Illuminate\Support\Facades\Session;
 <script src="/assets/frontend/js/jquery.prettyPhoto.js"></script>
 <script src="/assets/frontend/js/main.js"></script>
 <script src="/assets/frontend/js/sweetalert.min.js"></script>
+
+<script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+
 
 
 <!-- <script type="text/javascript">

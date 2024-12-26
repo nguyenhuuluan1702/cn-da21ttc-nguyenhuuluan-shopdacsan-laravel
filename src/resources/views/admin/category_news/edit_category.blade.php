@@ -15,22 +15,41 @@
                             }
                             ?>
                         <div class="panel-body">
-                            @foreach($edit_category_news as $key => $edit_news)
+                           
                             <div class="position-center">
-                                <form role="form" action="{{URL::to('/update-category-news/'.$edit_news->cate_news_id)}}" method="post">
+                                <form role="form" action="{{URL::to('/update-category-news/'.$category_news->cate_news_id)}}" method="post">
                                     {{ csrf_field() }}
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Tên danh mục bài viết</label>
-                                    <input type="text" value="{{$edit_news->cate_news_name}}" name="category_news_name" class="form-control" id="exampleInputEmail1" >
+                                    <input type="text" value="{{$category_news->cate_news_name}}" name="cate_news_name" class="form-control" id="exampleInputEmail1" >
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Slug</label>
+                                    <input type="text"  value="{{$category_news->cate_news_slug}}" name="cate_news_slug" class="form-control" id="exampleInputEmail1" placeholder="Slug">
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">Mô tả danh mục bài viết</label>
-                                    <textarea style="resize: none" rows="8" class="form-control" name="category_news_desc" id="exampleInputPassword1" >{{$edit_news->cate_news_desc}}</textarea>
+                                    <textarea style="resize: none" rows="8" class="form-control" name="cate_news_desc" 
+                                    id="exampleInputPassword1" >{{$category_news->cate_news_desc}}</textarea>
                                 </div>
-                                <button type="submit" name="update_category_news" class="btn btn-info">Cập nhật thương hiệu</button>
+
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Hiển thị</label>
+                                      <select name="cate_news_status" class="form-control input-sm m-bot15">
+                                        @if($category_news->cate_news_status==0)
+                                            <option value="1">Ẩn</option>
+                                            <option selected value="0">Hiển thị</option>
+                                        @else
+                                            <option value="0">Hiển thị</option>
+                                            <option selected value="1">Ẩn</option>    
+                                        @endif
+                                    </select>
+                                </div>
+
+                                <button type="submit" name="update_news_cate" class="btn btn-info">Cập nhật</button>
                                 </form>
                             </div>
-                            @endforeach
+                          
                         </div>
                     </section>
 

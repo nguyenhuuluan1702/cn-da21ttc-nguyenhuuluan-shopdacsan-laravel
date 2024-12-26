@@ -31,9 +31,9 @@ class CategoryNews extends Controller
 
     public function all_category_news() {
         $this->AuthLogin(); 
-        $all_category_news = DB::table('tbl_category_news')->get();
-    	$manager_category_news  = view('admin.category_news.all_category')->with('all_category_news',$all_category_news);
-    	return view('admin_layout')->with('admin.category_news.all_category', $manager_category_news);
+        $category_news = CateNews::orderBY('cate_news_id','DESC')->paginate(5);
+    	
+    	return view('admin.category_news.all_category')->with(compact('category_news'));
     }
 
     public function save_category_news(Request $request){
@@ -41,6 +41,7 @@ class CategoryNews extends Controller
     	$data = $request->all();
         $category_news = new CateNews();
     	$category_news->cate_news_name = $data['cate_news_name'];
+    	$category_news->cate_news_slug = $data['cate_news_slug'];
     	$category_news->cate_news_desc = $data['cate_news_desc'];
     	$category_news->cate_news_status = $data['cate_news_status'];
         $category_news->save();
@@ -51,28 +52,33 @@ class CategoryNews extends Controller
 
     public function edit_category_news($category_news_id){
         $this->AuthLogin();
-        $edit_category_news = DB::table('tbl_category_news')->where('cate_news_id',$category_news_id)->get();
+        $category_news = CateNews::find($category_news_id);
 
-        $manager_category_news  = view('admin.category_news.edit_category')->with('edit_category_news',$edit_category_news);
+    	return view('admin.category_news.edit_category')->with(compact('category_news'));
 
-        return view('admin_layout')->with('admin.category_news.edit_category', $manager_category_news);
+        
     }
 
-    public function update_category_news(Request $request,$category_news_id){
-        $this->AuthLogin();
-        $data = array();
-        $data['cate_news_name'] = $request->category_news_name;
-        $data['cate_news_desc'] = $request->category_news_desc;
-        DB::table('tbl_category_news')->where('cate_news_id',$category_news_id)->update($data);
-        Session::put('message','Cập nhật danh mục bài viết thành công');
-        return Redirect::to('all-category-news');
+    public function update_category_news(Request $request, $cate_id){
+    
+        $data = $request->all();
+        $category_news = CateNews::find($cate_id);
+    	$category_news->cate_news_name = $data['cate_news_name'];
+    	$category_news->cate_news_slug = $data['cate_news_slug'];
+    	$category_news->cate_news_desc = $data['cate_news_desc'];
+    	$category_news->cate_news_status = $data['cate_news_status'];
+        $category_news->save();
+    	
+    	Session::put('message','Cập nhật danh mục bài viết thành công');
+    	return redirect('/all-category-news');
     }
 
-    public function delete_category_news($category_news_id){
-        $this->AuthLogin();
-        DB::table('tbl_category_news')->where('cate_news_id',$category_news_id)->delete();
+    public function delete_category_news($cate_id){
+        $category_news = CateNews::find($cate_id);
+
+        $category_news->delete();
         Session::put('message','Xóa danh mục bài viết thành công');
-        return Redirect::to('all-category-news');
+    	return redirect()->back();
     }
 
     public function unactive_category_news($category_news_id){
@@ -87,6 +93,10 @@ class CategoryNews extends Controller
         DB::table('tbl_category_news')->where('cate_news_id',$category_news_id)->update(['cate_news_status'=>0]);
         Session::put('message','Kích hoạt danh mục bài viết thành công');
         return Redirect::to('all-category-news');
+    }
+
+    public function danh_muc_bai_viet($cate_news_slug){
+
     }
 
 

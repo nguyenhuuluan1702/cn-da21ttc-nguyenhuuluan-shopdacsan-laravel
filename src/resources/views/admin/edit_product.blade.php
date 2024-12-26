@@ -28,6 +28,10 @@
                                     <label for="exampleInputEmail1">Số lượng sản phẩm</label>
                                     <input type="text" data-validation="number" data-validation-error-msg="Làm ơn điền số lượng" name="product_quantity" class="form-control" id="exampleInputEmail1" value="{{$pro->product_quantity}}" placeholder="Điền số lượng">
                                 </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Số lượng đã bán</label>
+                                    <input type="text" data-validation="number" data-validation-error-msg="Làm ơn điền số lượng" name="product_sold" class="form-control" id="exampleInputEmail1" value="{{$pro->product_quantity}}" placeholder="Điền số lượng">
+                                </div>
                                      <div class="form-group">
                                     <label for="exampleInputEmail1">Giá sản phẩm</label>
                                     <input type="text" value="{{$pro->product_price}}" name="product_price" class="form-control" id="exampleInputEmail1" >

@@ -24,10 +24,10 @@
                                     <label for="exampleInputEmail1">Tên danh mục bài viết</label>
                                     <input type="text" data-validation="length" data-validation-length="min1" data-validation-error-msg="Vui lòng nhập tên thương hiệu" name="cate_news_name" class="form-control" id="exampleInputEmail1" placeholder="Tên danh mục">
                                 </div>
-                                <!--<div class="form-group">
+                                <div class="form-group">
                                     <label for="exampleInputEmail1">Slug</label>
-                                    <input type="text" name="brand_slug" class="form-control" id="exampleInputEmail1" placeholder="Slug">
-                                </div>-->
+                                    <input type="text" name="cate_news_slug" class="form-control" id="exampleInputEmail1" placeholder="Slug">
+                                </div>
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">Mô tả danh mục bài viết</label>
                                     <textarea style="resize: none" rows="8" class="form-control" data-validation="length" data-validation-length="min1" data-validation-error-msg="Vui lòng mô tả thương hiệu" name="cate_news_desc" id="exampleInputPassword1" placeholder="Mô tả danh mục"></textarea>

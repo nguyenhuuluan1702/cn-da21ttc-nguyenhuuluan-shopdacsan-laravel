@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 use App\Models\CateNews;
 use App\Models\Comment;
+use App\Models\Product;
 use App\Models\Rating;
 use App\Models\Slider;
 use Illuminate\Contracts\Session\Session as SessionSession;
@@ -85,7 +86,7 @@ class ProductController extends Controller
 
     	$data['product_name'] = $request->product_name;
         $data['product_quantity'] = $request->product_quantity;
-        //$data['product_slug'] = $request->product_slug;
+        $data['product_sold'] = $request->product_sold;
     	$data['product_price'] = $request->product_price;
     	$data['product_desc'] = $request->product_desc;
         $data['product_content'] = $request->product_content;
@@ -141,7 +142,7 @@ class ProductController extends Controller
         $data = array();
         $data['product_name'] = $request->product_name;
         $data['product_quantity'] = $request->product_quantity;
-        //$data['product_slug'] = $request->product_slug;
+        $data['product_sold'] = $request->product_sold;
         $data['product_price'] = $request->product_price;
         $data['product_desc'] = $request->product_desc;
         $data['product_content'] = $request->product_content;
@@ -192,6 +193,10 @@ class ProductController extends Controller
             $category_id = $value->category_id;
         }
 
+        $product = Product::where('product_id',$product_id)->first();
+        $product->product_views = $product->product_views + 1;
+        $product->save();
+
         $related_product = DB::table('tbl_product')
         ->join('tbl_category_product','tbl_category_product.category_id','=','tbl_product.category_id')
         ->join('tbl_brand','tbl_brand.brand_id','=','tbl_product.brand_id')
@@ -213,4 +218,4 @@ class ProductController extends Controller
         echo 'done';
     }
     
-}
+}   

@@ -226,28 +226,17 @@ use Illuminate\Support\Facades\Session;
                     <option value="">----Cập nhật tình trạng đơn hàng-----</option>
                     <option id="{{$or->order_id}}" selected value="1">Chưa xử lý</option>
                     <option id="{{$or->order_id}}" value="2">Đã xử lý-Đã giao hàng</option>
-                    <option id="{{$or->order_id}}" value="3">Hủy đơn hàng-tạm giữ</option>
                   </select>
                 </form>
-                @elseif($or->order_status==2)
-                <form>
-                  @csrf
-                  <select class="form-control order_details">
-                    <option value="">----Cập nhật tình trạng đơn hàng-----</option>
-                    <option id="{{$or->order_id}}" value="1">Chưa xử lý</option>
-                    <option id="{{$or->order_id}}" selected value="2">Đã xử lý-Đã giao hàng</option>
-                    <option id="{{$or->order_id}}" value="3">Hủy đơn hàng-tạm giữ</option>
-                  </select>
-                </form>
-
+              
                 @else
+
                 <form>
                    @csrf
                   <select class="form-control order_details">
                     <option value="">----Cập nhật tình trạng đơn hàng-----</option>
-                    <option id="{{$or->order_id}}" value="1">Chưa xử lý</option>
-                    <option id="{{$or->order_id}}"  value="2">Đã xử lý-Đã giao hàng</option>
-                    <option id="{{$or->order_id}}" selected value="3">Hủy đơn hàng-tạm giữ</option>
+                    <option disabled id="{{$or->order_id}}" value="1">Chưa xử lý</option>
+                    <option id="{{$or->order_id}}" selected value="2">Đã xử lý-Đã giao hàng</option>
                   </select>
                 </form>
 

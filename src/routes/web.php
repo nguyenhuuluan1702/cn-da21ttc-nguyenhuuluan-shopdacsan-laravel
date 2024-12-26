@@ -29,8 +29,8 @@ Route::get('/thuong-hieu-san-pham/{brand_id}','App\Http\Controllers\BrandProduct
 Route::get('/chi-tiet-san-pham/{product_id}','App\Http\Controllers\ProductController@details_product');
 
 //Bài viết
-Route::get('/danh-muc-bai-viet/{news_id}','App\Http\Controllers\NewsController@danh_muc_bai_viet');
-Route::get('/bai-viet/{news_id}','App\Http\Controllers\NewsController@bai_viet');
+Route::get('/danh-muc-bai-viet/{news_slug}','App\Http\Controllers\NewsController@danh_muc_bai_viet');
+Route::get('/bai-viet/{news_slug}','App\Http\Controllers\NewsController@bai_viet');
 
 
 //Backend
@@ -38,6 +38,9 @@ Route::get('/admin', 'App\Http\Controllers\AdminController@index');
 Route::get('/dashboard', 'App\Http\Controllers\AdminController@show_dashboard');
 Route::get('/logout', 'App\Http\Controllers\AdminController@logout');    
 Route::post('/admin-dashboard', 'App\Http\Controllers\AdminController@dashboard');    
+Route::post('/filter-by-date', 'App\Http\Controllers\AdminController@filter_by_date');    
+Route::post('/dashboard-filter', 'App\Http\Controllers\AdminController@dashboard_filter');    
+Route::post('/days-order', 'App\Http\Controllers\AdminController@days_order');    
 
 //Category Product
 Route::get('/add-category-product', 'App\Http\Controllers\CategoryProduct@add_category_product');
@@ -65,17 +68,17 @@ Route::get('/active-brand-product/{brand_product_id}', 'App\Http\Controllers\Bra
 Route::get('/add-category-news', 'App\Http\Controllers\CategoryNews@add_category_news');
 Route::get('/all-category-news', 'App\Http\Controllers\CategoryNews@all_category_news');
 Route::get('/edit-category-news/{category_news_id}', 'App\Http\Controllers\CategoryNews@edit_category_news');
-Route::get('/delete-category-news/{category_news_id}', 'App\Http\Controllers\CategoryNews@delete_category_news');
+Route::get('/delete-category-news/{cate_id}', 'App\Http\Controllers\CategoryNews@delete_category_news');
 Route::get('/unactive-category-news/{category_news_id}', 'App\Http\Controllers\CategoryNews@unactive_category_news');
 Route::get('/active-category-news/{category_news_id}', 'App\Http\Controllers\CategoryNews@active_category_news');
 Route::post('/save-category-news', 'App\Http\Controllers\CategoryNews@save_category_news');
-Route::post('/update-category-news/{category_news_id}', 'App\Http\Controllers\CategoryNews@update_category_news');
+Route::post('/update-category-news/{cate_id}', 'App\Http\Controllers\CategoryNews@update_category_news');
 
 //News
 Route::get('/add-news', 'App\Http\Controllers\NewsController@add_news');
 Route::get('/all-news', 'App\Http\Controllers\NewsController@all_news');
 Route::get('/delete-news/{news_id}', 'App\Http\Controllers\NewsController@delete_news');
-Route::get('/edit-news/{news_id}', 'App\Http\Controllers\NewsController@edit_news');
+Route::get('/edit-news/{new_id}', 'App\Http\Controllers\NewsController@edit_news');
 Route::post('/save-news', 'App\Http\Controllers\NewsController@save_news');
 Route::post('/update-news/{news_id}', 'App\Http\Controllers\NewsController@update_news');
 

@@ -10,7 +10,7 @@
                 <div class="d-flex">
                     <img style="float: left; width: 30%; margin-right: 15px; height: 150px; object-fit: cover; border: 2px solid #ccc; border-radius: 5px;" 
                         src="{{URL::to('public/uploads/news/'.$p->news_image)}}" 
-                        alt="{{ $p->news_id }}" />
+                        alt="{{ $p->news_slug }}" />
                         
                     <div style="overflow: hidden; text-align: left;">
                         <h4 style="color: #000; margin-bottom: 10px;">{{ $p->news_title }}</h4>
@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="text-right" style="margin-top: 10px;">
-                    <a href="{{url('/bai-viet/'.$p->news_id)}}" class="btn btn-default btn-sm">Xem bài viết</a>
+                    <a href="{{url('/bai-viet/'.$p->news_slug)}}" class="btn btn-default btn-sm">Xem bài viết</a>
                 </div>
             </div>
             @endforeach

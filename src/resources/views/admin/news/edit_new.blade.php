@@ -25,10 +25,10 @@
                                     <input type="text" data-validation="length" data-validation-length="min1" 
                                     data-validation-error-msg="Vui lòng nhập tên thương hiệu" name="news_title" class="form-control" value="{{$news->news_title}}" id="exampleInputEmail1" placeholder="Tên danh mục">
                                 </div>
-                                <!--<div class="form-group">
+                                <div class="form-group">
                                     <label for="exampleInputEmail1">Slug</label>
-                                    <input type="text" name="brand_slug" class="form-control" id="exampleInputEmail1" placeholder="Slug">
-                                </div>-->
+                                    <input type="text" name="news_slug" class="form-control" value="{{$news->news_slug}}" id="exampleInputEmail1" placeholder="Slug">
+                                </div>
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">Tóm tắt bài viết</label>
                                     <textarea style="resize: none" rows="8" class="form-control" data-validation="length" data-validation-length="min1" 

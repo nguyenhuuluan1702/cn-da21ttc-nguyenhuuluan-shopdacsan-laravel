@@ -47,6 +47,7 @@ class NewsController extends Controller
     $news = new News();
 
     $news->news_title = $data['news_title'];
+    $news->news_slug = $data['news_slug'];
     $news->news_desc = $data['news_desc'];
     $news->news_content = $data['news_content'];
     $news->cate_news_id = $data['cate_news_id'];
@@ -101,6 +102,7 @@ class NewsController extends Controller
         $news = News::find($news_id);
 
         $news->news_title = $data['news_title'];
+        $news->news_slug = $data['news_slug'];
         $news->news_desc = $data['news_desc'];
         $news->news_content = $data['news_content'];
         $news->cate_news_id = $data['cate_news_id'];
@@ -128,7 +130,7 @@ class NewsController extends Controller
         
     }
 
-    public function danh_muc_bai_viet($news_id) {
+    public function danh_muc_bai_viet(Request $request, $news_slug) {
         $category_news = CateNews::orderBy('cate_news_id', 'DESC')->get();
     
         // Slide
@@ -147,11 +149,12 @@ class NewsController extends Controller
             ->orderBy('brand_id', 'desc')
             ->get();
         
-        $catenews = CateNews::where('cate_news_id', $news_id)
+        $catenews = CateNews::where('cate_news_slug', $news_slug)
             ->take(1)
             ->get();
         
         $cate_news_name = ""; // Khởi tạo biến rỗng để tránh lỗi
+
         foreach ($catenews as $key => $cate) {
             $cate_id = $cate->cate_news_id;
             $cate_news_name = $cate->cate_news_name; // Lấy tên danh mục
@@ -172,7 +175,7 @@ class NewsController extends Controller
     }
     
 
-    public function bai_viet($news_id) {
+    public function bai_viet(Request $request, $news_slug) {
         
         $category_news = CateNews::orderBy('cate_news_id', 'DESC')->get();
 
@@ -192,30 +195,29 @@ class NewsController extends Controller
             ->orderBy('brand_id', 'desc')
             ->get();
 
-        $news = News::with('cate_news')
+        $news_test = News::with('cate_news')
         ->where('news_status', 0)
-        ->where('news_id', $news_id)
+        ->where('news_slug', $news_slug)
         ->take(1)->get();    
         
-        foreach ($news as $key => $p) {
-        //     // SEO
-        //     $meta_desc = $cate->cate_news_desc;
-        //     $meta_keywords = $cate->cate_news_slug;
-        //     $meta_title = $cate->cate_news_name;
-                $cate_id = $p->cate_news_id;
-                // $news_id = $p->news_title;
-        //     $url_canonical = $request->url();
-        //     // End SEO
+        foreach ($news_test as $key => $p) {        
+            $cate_id = $p->cate_news_id;
+            $news_id = $p->news_id;
+
         }
         
         // Lấy tiêu đề bài viết
-        $news_title = $news->first()->news_title ?? 'Không tìm thấy bài viết';
+        $news_title = $news_test->first()->news_title ?? 'Không tìm thấy bài viết';
+
+        $news = News::where('news_id', $news_id)->first();
+        $news->news_views = $news->news_views + 1;
+        $news->save();
         
         return view('pages.baiviet.baiviet')
             ->with('category', $cate_product)
             ->with('brand', $brand_product)
             ->with('slider', $slider)
-            ->with('news', $news)
+            ->with('news_test', $news_test)
             ->with('news_title', $news_title)
             ->with('category_news', $category_news);
         
