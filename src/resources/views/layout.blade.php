@@ -154,7 +154,7 @@ use Illuminate\Support\Facades\Session;
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
 								<li><a href="{{URL::to('/trang-chu')}}" class="active">Trang chủ</a></li>
-								<li class="dropdown"><a href="#">Tin tức<i class="fa fa-angle-down"></i></a>	
+								<li class="dropdown"><a href="#">Giới thiệu<i class="fa fa-angle-down"></i></a>	
                                     <ul role="menu" class="sub-menu">
 									@foreach($category_news as $key => $danhmucbaiviet)
                                         <li><a href="{{URL::to('/danh-muc-bai-viet/'.$danhmucbaiviet->cate_news_slug)}}">{{$danhmucbaiviet->cate_news_name}}</a></li>                                      

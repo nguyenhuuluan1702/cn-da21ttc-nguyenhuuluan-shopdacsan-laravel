@@ -38,7 +38,11 @@
                                     <input type="text" name="product_slug" class="form-control" id="exampleInputEmail1" placeholder="Tên danh mục">
                                 </div> -->
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1">Giá sản phẩm</label>
+                                    <label for="exampleInputEmail1">Giá gốc</label>
+                                    <input type="text" data-validation="number" data-validation-error-msg="Vui lòng nhập số tiền" name="product_von" class="form-control" id="" placeholder="Tên danh mục">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Giá bán</label>
                                     <input type="text" data-validation="number" data-validation-error-msg="Vui lòng nhập số tiền" name="product_price" class="form-control" id="" placeholder="Tên danh mục">
                                 </div>
                                 <div class="form-group">

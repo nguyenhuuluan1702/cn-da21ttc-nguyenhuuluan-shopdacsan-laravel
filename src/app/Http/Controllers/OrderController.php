@@ -9,9 +9,12 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderDetails;
 use App\Models\Shipping;
+use App\Models\Statistic;
 use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -23,85 +26,149 @@ class OrderController extends Controller
 		$order_details->save();
 	}
 
-	// public function update_order_qty(Request $request){
-	// 	//update order
-	// 	$data = $request->all();
-	// 	$order = Order::find($data['order_id']);
-	// 	$order->order_status = $data['order_status'];
-	// 	$order->save();
-	// 	if($order->order_status==2){
-	// 		foreach($data['order_product_id'] as $key => $product_id){
+	public function update_order_qty(Request $request) {
+		$data = $request->all();
+		
+		// Tìm kiếm đơn hàng
+		$order = Order::find($data['order_id']);
+		if (!$order) {
+			return response()->json(['status' => 'error', 'message' => 'Đơn hàng không tồn tại']);
+		}
+	
+		// Cập nhật trạng thái đơn hàng
+		$order->order_status = $data['order_status'];
+		$order->save();
+	
+		// Lấy ngày đặt hàng
+		$order_date = $order->order_date;
+	
+		// Tìm kiếm dữ liệu thống kê theo ngày đặt hàng
+		$statistic = Statistic::where('order_date', $order_date)->first();
+	
+		// Khởi tạo các giá trị ban đầu
+		$total_order = 0;
+		$sales = 0;
+		$profit = 0;
+		$quantity = 0;
+	
+		if ($order->order_status == 2) { // Nếu trạng thái đơn hàng là "Đã xử lý"
+			foreach ($data['order_product_id'] as $key => $product_id) {
+				$product = Product::find($product_id);
+				if ($product) {
+					$product_quantity = $product->product_quantity;
+					$product_sold = $product->product_sold;
+					$product_price = $product->product_price;
+					$product_von = $product->product_von;
+	
+					// Cập nhật số lượng sản phẩm và số lượng đã bán
+					foreach ($data['quantity'] as $key2 => $qty) {
+						if ($key == $key2) {
+							if ($qty > $product_quantity) {
+								return response()->json(['status' => 'error', 'message' => 'Số lượng mua vượt quá số lượng trong kho']);
+							}
+	
+							$pro_remain = $product_quantity - $qty;
+							$product->product_quantity = $pro_remain;
+							$product->product_sold = $product_sold + $qty;
+							$product->save();
+	
+							// Cập nhật thống kê
+							$quantity += $qty;
+							$total_order += 1;
+							$sales += $product_price * $qty;
+							$profit = $sales - ($product_von * $qty); 
+	
+						}
+					}
+				}
+			}
+	
+			// Cập nhật thông tin thống kê
+			if ($statistic) {
+				$statistic->sales += $sales;
+				$statistic->profit += $profit;
+				$statistic->quantity += $quantity;
+				$statistic->total_order += $total_order;
+				$statistic->save();
+			} else {
+				// Nếu không có thống kê cho ngày này, tạo mới
+				$statistic_new = new Statistic();
+				$statistic_new->order_date = $order_date;
+				$statistic_new->sales = $sales;
+				$statistic_new->profit = $profit;
+				$statistic_new->quantity = $quantity;
+				$statistic_new->total_order = $total_order;
+				$statistic_new->save();
+			}
+		}
+	
+		return response()->json(['status' => 'success', 'message' => 'Cập nhật đơn hàng thành công']);
+	}
+	
+	
+
+// 	public function update_order_qty(Request $request){
+// 		$data = $request->all();
+// 		$order = Order::find($data['order_id']);
+// 		$order->order_status = $data['order_status'];
+// 		$order->save();
+// 		// Lấy ngày đặt hàng
+// 		$order_date = $order->order_date;
+
+// 		// Tìm kiếm dữ liệu thống kê theo ngày đặt hàng
+// 		$statistic = Statistic::where('order_date', $order_date)->get();
+
+// 		if($statistic) {
+// 			$statistic_count = $statistic->count();
+// 		} else {
+// 			$statistic_count = 0;
+// 		}
+// 		if ($order->order_status == 2) {
+// 			$total_order = 0;
+// 			$sales = 0;
+// 			$profit = 0;
+// 			$quantity = 0;
+// 			foreach ($data['order_product_id'] as $key => $product_id) {
+// 				$product = Product::find($product_id);
+// 				$product_quantity = $product->product_quantity;
+// 				$product_sold = $product->product_sold;
+
+// 				$product_price = $product->product_price;
+// 				$now = Carbon::now('Asis/Ho_Chi_Minh')->toDateString();
+
+// 				foreach($data['quantity'] as $key2 => $qty){
+// 					if($key==$key2){
+// 						$pro_remain = $product_quantity - $qty;
+// 						$product->product_quantity = $pro_remain;
+// 						$product->product_sold = $product_sold + $qty;
+// 						$product->save();
+
+// 						$quantity += $qty; 
+// 						$total_order += 1; 
+// 						$sales += $product_price * $qty; 
+// 						$profit = $sales - 1000;
+// 						}
+// 					}
+// 				}
+// 				if($statistic_count > 0){
+// 					$statistic_update = Statistic::where('order_date', $order_date)->first();
+// 					$statistic_update->sales = $statistic_update->sales + $sales;
+// 					$statistic_update->profit = $statistic_update->profit + $profit;
+// 					$statistic_update->quantity = $statistic_update->quantity + $quantity;
+// 					$statistic_update->total_order = $statistic_update->total_order + $total_order;
+// 					$statistic_update->save();
+// 				}else{
+// 					$statistic_new = new Statistic();
+// 					$statistic_new->order_date = $order_date;
+// 					$statistic_new->sales = $sales;
+// 					$statistic_new->profit = $profit;
+// 					$statistic_new->quantity = $quantity;
+// 					$statistic_new->total_order = $total_order;
+// 					$statistic_new->save();
+// 				}
 				
-	// 			$product = Product::find($product_id);
-	// 			$product_quantity = $product->product_quantity;
-	// 			$product_sold = $product->product_sold;
-	// 			foreach($data['quantity'] as $key2 => $qty){
-	// 					if($key==$key2){
-	// 							$pro_remain = $product_quantity - $qty;
-	// 							$product->product_quantity = $pro_remain;
-	// 							$product->product_sold = $product_sold + $qty;
-	// 							$product->save();
-	// 					}
-	// 			}
-	// 		}
-	// 	}elseif($order->order_status!=2 && $order->order_status!=3){
-	// 		foreach($data['order_product_id'] as $key => $product_id){
-				
-	// 			$product = Product::find($product_id);
-	// 			$product_quantity = $product->product_quantity;
-	// 			$product_sold = $product->product_sold;
-	// 			foreach($data['quantity'] as $key2 => $qty){
-	// 					if($key==$key2){
-	// 							$pro_remain = $product_quantity + $qty;
-	// 							$product->product_quantity = $pro_remain;
-	// 							$product->product_sold = $product_sold - $qty;
-	// 							$product->save();
-	// 					}
-	// 			}
-	// 		}
-	// 	}
-
-
-	// }
-	public function update_order_qty(Request $request)
-{
-    $data = $request->all();
-    $order = Order::find($data['order_id']);
-    $order->order_status = $data['order_status'];
-
-    if ($order->order_status == 2) {
-        foreach ($data['order_product_id'] as $key => $product_id) {
-            $product = Product::find($product_id);
-            $product_quantity = $product->product_quantity;
-            $product_sold = $product->product_sold;
-
-            // Kiểm tra số lượng tồn kho
-            if ($data['quantity'][$key] > $product_quantity) {
-                return response()->json(['error' => 'Số lượng mua lớn hơn số lượng tồn kho cho sản phẩm ID: ' . $product_id], 400);
-            }
-
-            // Nếu hợp lệ, cập nhật số lượng tồn kho
-            $pro_remain = $product_quantity - $data['quantity'][$key];
-            $product->product_quantity = $pro_remain;
-            $product->product_sold = $product_sold + $data['quantity'][$key];
-            $product->save();
-        }
-    } elseif ($order->order_status != 2 && $order->order_status != 3) {
-        foreach ($data['order_product_id'] as $key => $product_id) {
-            $product = Product::find($product_id);
-            $product_quantity = $product->product_quantity;
-            $product_sold = $product->product_sold;
-
-            $pro_remain = $product_quantity + $data['quantity'][$key];
-            $product->product_quantity = $pro_remain;
-            $product->product_sold = $product_sold - $data['quantity'][$key];
-            $product->save();
-        }
-    }
-
-    $order->save();
-    return response()->json(['success' => 'Cập nhật đơn hàng thành công']);
-}
+// 			}   
+// }
 
 
 	public function order_code(Request $request ,$order_code){

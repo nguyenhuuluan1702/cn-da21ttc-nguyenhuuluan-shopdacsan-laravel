@@ -4,11 +4,11 @@
         
         <h2 class="title text-center">{{$cate_news_name}}</h2>
         
-        <div class="product-image-wrapper">
-            @foreach($news as $key => $p)                              
+        <div class="product-image-wrapper2">
+            @foreach($news as $key => $p)                                      
             <div class="single-products" style="margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;">
                 <div class="d-flex">
-                    <img style="float: left; width: 30%; margin-right: 15px; height: 150px; object-fit: cover; border: 2px solid #ccc; border-radius: 5px;" 
+                    <img style="float: left; width: 30%; margin-right: 15px; height: 160px; object-fit: cover; border: 2px solid #ccc; border-radius: 5px;" 
                         src="{{URL::to('public/uploads/news/'.$p->news_image)}}" 
                         alt="{{ $p->news_slug }}" />
                         

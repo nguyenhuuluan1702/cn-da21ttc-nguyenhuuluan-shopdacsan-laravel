@@ -74,7 +74,7 @@
         <ol class="list_views">
             @foreach($news_views as $key => $news)
                 <li>
-                    <a target="_blank" href="{{url('/bai-viet/'.$news->news_slug)}}">{{$news->news_title}} | <span style="color: black">
+                    <a target="_blank" href="{{url('/bai-viet/'.$news->news_slug)}}">{{$news->news_title}}: <span style="color: black">
                         {{$news->news_views}}</span></a>
                 </li>
             @endforeach 
@@ -95,7 +95,7 @@
             <ol class="list_views">
                 @foreach($product_views as $key => $pro)
                 <li>
-                    <a target="_blank" href="{{url('/chi-tiet-san-pham/'.$pro->product_id)}}">{{$pro->product_name}} | <span style="color:black">{{$pro->product_views}}</span></a>
+                    <a target="_blank" href="{{url('/chi-tiet-san-pham/'.$pro->product_id)}}">{{$pro->product_name}}: <span style="color:black">{{$pro->product_views}}</span></a>
                 </li>
                 @endforeach
             </ol>

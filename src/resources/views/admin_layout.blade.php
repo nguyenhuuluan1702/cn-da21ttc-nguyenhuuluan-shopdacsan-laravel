@@ -263,7 +263,7 @@ $(function() {
 <script type="text/javascript">
    $(document).ready(function() {
 
-        chart30daysorder();
+        //chart30daysorder();
 
             var chart = new Morris.Bar({
             // ID của phần tử để vẽ biểu đồ.
@@ -289,18 +289,18 @@ $(function() {
             labels: ['đơn hàng', 'doanh số', 'lợi nhuận', 'số lượng']
         });
 
-                function chart30daysorder() {
-                var _token = $('input[name="_token"]').val();
-                $.ajax({
-                    url: "{{url('/days-order')}}",
-                    method: "POST",
-                    dataType: "JSON",
-                    data: {_token: _token},
-                    success: function(data) {
-                        chart.setData(data);
-                    }
-                });
-            }
+            //     function chart30daysorder() {
+            //     var _token = $('input[name="_token"]').val();
+            //     $.ajax({
+            //         url: "{{url('/days-order')}}",
+            //         method: "POST",
+            //         dataType: "JSON",
+            //         data: {_token: _token},
+            //         success: function(data) {
+            //             chart.setData(data);
+            //         }
+            //     });
+            // }
 
             $('.dashboard-filter').change(function() {
                 var dashboard_value = $(this).val();
@@ -493,6 +493,9 @@ $(document).ready(function(){
 });
 
 </script>
+
+
+
 
 <script>
 	$(document).ready(function() {

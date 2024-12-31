@@ -127,7 +127,8 @@ use Illuminate\Support\Facades\Session;
             <th>Số lượng kho</th>
             <th>Số lượng</th>
             <th>Mã giảm giá</th>
-            <th>Giá sản phẩm</th>
+            <th>Giá gốc</th>
+            <th>Giá bán</th>
             <th>Tổng tiền</th>
             
             <th style="width:30px;"></th>
@@ -190,6 +191,7 @@ use Illuminate\Support\Facades\Session;
 
             </td> -->
             
+            <td>{{number_format($details->product->product_von ,0,',','.')}}đ</td>
             <td>{{number_format($details->product_price ,0,',','.')}}đ</td>
             <td>{{number_format($subtotal ,0,',','.')}}đ</td>
           </tr>
