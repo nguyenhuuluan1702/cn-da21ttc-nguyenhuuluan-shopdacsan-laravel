@@ -143,7 +143,7 @@ use Illuminate\Support\Facades\Session;
                              }
                                  ?>
 
-								<li><a href="{{URL::to('/admin')}}"><i class="fa-solid fa-user-tie"></i> Admin</a></li>
+								<!-- <li><a href="{{URL::to('/admin')}}"><i class="fa-solid fa-user-tie"></i> Admin</a></li> -->
 							</ul>
 						</div>
 					</div>
