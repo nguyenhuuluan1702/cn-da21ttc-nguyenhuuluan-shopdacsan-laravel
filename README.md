@@ -3,10 +3,20 @@
 Website giúp người dùng tìm hiểu thông tin về đặc sản địa phương Trà Vinh và mua sắm trực tuyến.
 
 ## Tính Năng
-- Giới thiệu các đặc sản của Trà Vinh.
-- Tích hợp giỏ hàng và thanh toán trực tuyến.
-- Tìm kiếm sản phẩm theo danh mục và thương hiệu.
-- Quản lý tài khoản người dùng và admin.
+- Admin:
+  - Quản lý thông tin khách hàng.
+  - Quản lý sản phẩm, danh mục, thương hiệu, khuyến mãi, bài viết.
+  - Quản lý đơn hàng, duyệt đơn hàng.
+  - Quản lý slide website.
+  - Thống kê doanh số, lợi nhuận theo từng thời điểm.
+  - Quản lý sản phẩm tồn kho, sản phẩm bán chạy.
+- User:
+  - Giới thiệu các đặc sản của Trà Vinh.
+  - Tích hợp giỏ hàng và thanh toán trực tuyến qua ví VNPAY.
+  - Tìm kiếm sản phẩm theo danh mục và thương hiệu.
+  - Quản lý tài khoản người dùng và admin.
+  - Nhận mail xác nhận đơn hàng và xem lịch sử đơn hàng.
+  - Đánh giá sản phẩm sau khi mua.
 
 ## Công Nghệ Sử Dụng
 - **Framework**: Laravel 8.75
@@ -19,7 +29,7 @@ Website giúp người dùng tìm hiểu thông tin về đặc sản địa ph�
 - PHP >= 8.0
 - Composer >= 2.0
 - MySQL >= 5.7
-- 
+  
 ## Hướng Dẫn Cài Đặt
 ### 1. Clone Repository
 ```bash
