@@ -1,6 +1,6 @@
 @extends('layout')
 @section('content')
-<section id="cart_items">
+<section id="cart_items">	
 		<div class="container">
 			<div class="breadcrumbs">
 				<ol class="breadcrumb">
@@ -54,7 +54,7 @@
 							</td>
 							<td class="cart_description">
 								<h4><a href=""></a></h4>
-                                <p>{{$cart['product_quantity']}}</p>
+                                <p style="margin-left: 64px;" >{{$cart['product_quantity']}}</p>
 
 							</td>
 							<td class="cart_price">
@@ -92,11 +92,25 @@
 							</td>   
 
 							<td>
-								@if(Session::get('customer'))
+								<!-- @if(Session::get('customer'))
 	                          	<a class="btn btn-default check_out" href="{{url('/checkout')}}">Đặt hàng</a>
 	                          	@else 
 	                          	<a class="btn btn-default check_out" href="{{url('/login-checkout')}}">Đặt hàng</a>
-								@endif
+								@endif -->
+
+								@php
+									$customer_id = Session::get('customer_id');
+									$shipping_id = Session::get('shipping_id');    
+									@endphp
+
+									@if($customer_id != NULL && $shipping_id == NULL)
+										<a href="{{ URL::to('/checkout') }}" class="btn btn-default check_out"> Thanh toán</a>
+									@elseif($customer_id != NULL && $shipping_id != NULL)
+										<a href="{{ URL::to('/payment') }}" class="btn btn-default check_out"> Thanh toán</a>
+									@else
+										<a href="{{ URL::to('/login-checkout') }}" class="btn btn-default check_out"> Thanh toán</a>
+									@endif
+
 							</td>
 
                             <!-- <td>
@@ -106,7 +120,7 @@
                             </td> -->
 
                             <td colspan="2">
-                                <li>Tổng tiền: <span>{{number_format($total,0,',','.')}}đ</span></li>
+                                <div style="margin-left:192px;font-size: 24px;color: #6abc3a;">Tổng tiền: <span>{{number_format($total,0,',','.')}}đ</span></div>
                                 <!-- <li>Thuế <span></span></li>
                                 <li>Phí vận chuyển <span>Free</span></li> -->
                                 @if(Session::get('coupon'))		
@@ -150,13 +164,13 @@
 					</form>
                     @if(Session::get('cart'))
                     <tr>
-						<td>
+						<!-- <td>
 							<form method="POST" action="{{url('/check-coupon')}}">
 								@csrf
 									<input type="text" class="form-control" name="coupon" placeholder="Nhập mã giảm giá"><br>
 	                          		<input type="submit" class="btn btn-default check_coupon" name="check_coupon" value="Tính mã giảm giá">                      	
                           	</form>
-                        </td>
+                        </td> -->
 					</tr>
 					@endif
 				</table>

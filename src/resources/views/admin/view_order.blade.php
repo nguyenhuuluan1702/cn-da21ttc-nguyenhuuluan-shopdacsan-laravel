@@ -65,7 +65,7 @@ use Illuminate\Support\Facades\Session;
         <thead>
           <tr>
            
-            <th>Tên người vận chuyển</th>
+            <th>Tên người nhận hàng</th>
             <th>Địa chỉ</th>
             <th>Số điện thoại</th>
             <th>Email</th>
@@ -227,7 +227,7 @@ use Illuminate\Support\Facades\Session;
                   <select class="form-control order_details">
                     <option value="">----Cập nhật tình trạng đơn hàng-----</option>
                     <option id="{{$or->order_id}}" selected value="1">Chưa xử lý</option>
-                    <option id="{{$or->order_id}}" value="2">Đã xử lý-Đã giao hàng</option>
+                    <option id="{{$or->order_id}}" value="2">Đã xử lý</option>
                   </select>
                 </form>
               
@@ -238,19 +238,17 @@ use Illuminate\Support\Facades\Session;
                   <select class="form-control order_details">
                     <option value="">----Cập nhật tình trạng đơn hàng-----</option>
                     <option disabled id="{{$or->order_id}}" value="1">Chưa xử lý</option>
-                    <option id="{{$or->order_id}}" selected value="2">Đã xử lý-Đã giao hàng</option>
+                    <option id="{{$or->order_id}}" selected value="2">Đã xử lý</option>
                   </select>
                 </form>
 
                 @endif
                 @endforeach
-
-
             </td>
           </tr>
         </tbody>
       </table>
-      <a target="_blank" href="{{url('/print-order/'.$details->order_code)}}">In đơn hàng</a>
+      <a id="printOrder" class="btn btn-primary btn-print" target="_blank" href="{{url('/print-order/'.$details->order_code)}}">In đơn hàng</a>
     </div> 
   </div>
 </div>

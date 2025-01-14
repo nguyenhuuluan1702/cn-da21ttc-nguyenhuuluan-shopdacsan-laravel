@@ -39,10 +39,19 @@ class AdminController extends Controller
         $order_dem = Order::all()->count();
         $customer_dem = Customer::all()->count();
 
-        $product_views = Product::orderBy('product_views', 'DESC')->take(20)->get();
+        $products_in_stock = Product::select('product_name', 'product_quantity')->get();
+
+        $product_views = Product::where('product_views', '>', 0)
+                            ->orderBy('product_views', 'desc')
+                            ->take(20)
+                            ->get();
+
         $news_views = News::orderBy('news_views', 'DESC')->take(20)->get();
 
-        return view('admin.dashboard')->with(compact('product_dem', 'news_dem', 'order_dem', 'customer_dem','product_views','news_views'));
+         // Dữ liệu cho sản phẩm bán chạy nhất
+        $top_products = Product::orderBy('product_sold', 'desc')->take(10)->get();
+
+        return view('admin.dashboard')->with(compact('product_dem', 'news_dem', 'order_dem', 'customer_dem','product_views','news_views','top_products', 'products_in_stock'));
 
     }
 

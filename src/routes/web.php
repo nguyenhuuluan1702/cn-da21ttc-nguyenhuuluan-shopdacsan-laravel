@@ -23,10 +23,15 @@ Route::get('/','App\Http\Controllers\HomeController@index' );
 Route::get('/trang-chu','App\Http\Controllers\HomeController@index');
 Route::post('/tim-kiem','App\Http\Controllers\HomeController@search');
 
+//Liên hệ
+Route::get('/lien-he','App\Http\Controllers\ContactController@lien_he');
+
+//Send Mail
+Route::post('/send-mail', 'App\Http\Controllers\HomeController@send_mail');
+
 //Danh mục sản phẩm
 Route::get('/danh-muc-san-pham/{category_id}','App\Http\Controllers\CategoryProduct@show_category_home');
 Route::get('/thuong-hieu-san-pham/{brand_id}','App\Http\Controllers\BrandProduct@show_brand_home');
-Route::get('/chi-tiet-san-pham/{product_id}','App\Http\Controllers\ProductController@details_product');
 
 //Bài viết
 Route::get('/danh-muc-bai-viet/{news_slug}','App\Http\Controllers\NewsController@danh_muc_bai_viet');
@@ -90,9 +95,16 @@ Route::get('/delete-product/{product_id}', 'App\Http\Controllers\ProductControll
 Route::get('/all-product', 'App\Http\Controllers\ProductController@all_product');
 Route::post('/save-product', 'App\Http\Controllers\ProductController@save_product');
 Route::post('/update-product/{product_id}', 'App\Http\Controllers\ProductController@update_product');
+Route::get('/chi-tiet-san-pham/{product_id}','App\Http\Controllers\ProductController@details_product');
+Route::get('/danh-gia-san-pham/{product_id}','App\Http\Controllers\ProductController@danh_gia_san_pham');
+
+//Đánh giá sản phẩm
 Route::post('/load-comment', 'App\Http\Controllers\ProductController@load_comment');
 Route::post('/send-comment', 'App\Http\Controllers\ProductController@send_comment');
 Route::post('/insert-rating', 'App\Http\Controllers\ProductController@insert_rating');
+
+//Top sản phẩm bán chạy
+Route::get('/top-products', 'App\Http\Controllers\ProductController@top_products');
 
 Route::get('/unactive-product/{product_id}', 'App\Http\Controllers\ProductController@unactive_product');
 Route::get('/active-product/{product_id}', 'App\Http\Controllers\ProductController@active_product');
@@ -129,6 +141,8 @@ Route::post('/save-checkout-customer','App\Http\Controllers\CheckoutController@s
 Route::post('/confirm-order','App\Http\Controllers\CheckoutController@confirm_order');
 
 //Order
+Route::get('/view-history-order/{order_code}','App\Http\Controllers\OrderController@view_history_order');
+Route::get('/history','App\Http\Controllers\OrderController@history');
 Route::get('/manage-order','App\Http\Controllers\OrderController@manage_order');
 Route::get('/print-order/{checkout_code}','App\Http\Controllers\OrderController@print_order');
 Route::get('/view-order/{order_code}','App\Http\Controllers\OrderController@view_order');
@@ -145,3 +159,6 @@ Route::get('/active-slide/{slide_id}','App\Http\Controllers\SliderController@act
 
 //Xử lí xem thêm sản phẩm
 Route::post('/load-more-products', 'App\Http\Controllers\HomeController@loadMoreProducts');
+
+//Cổng thanh toán VNPay
+Route::post('/vnpay-payment','App\Http\Controllers\CheckoutController@vnpay_payment');

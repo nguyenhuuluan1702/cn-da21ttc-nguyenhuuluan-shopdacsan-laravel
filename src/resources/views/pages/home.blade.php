@@ -1,4 +1,7 @@
 @extends('layout')
+@section('slide')
+@include('pages.include.slide')
+@endsection
 @section('content')
 <div class="features_items"><!--features_items-->
        

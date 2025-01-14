@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CateNews;
 use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\Customer;
@@ -9,10 +10,12 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderDetails;
 use App\Models\Shipping;
+use App\Models\Slider;
 use App\Models\Statistic;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
 
@@ -76,7 +79,7 @@ class OrderController extends Controller
 							$quantity += $qty;
 							$total_order += 1;
 							$sales += $product_price * $qty;
-							$profit = $sales - ($product_von * $qty); 
+							$profit += ($product_price - $product_von) * $qty; 
 	
 						}
 					}
@@ -437,7 +440,75 @@ class OrderController extends Controller
 			$coupon_number = 0;
 		}
 		
-		return view('admin.view_order')->with(compact('order_details','customer','shipping','order_details','coupon_condition','coupon_number','order','order_status'));
+		return view('admin.view_order')->with(compact('order_details','customer','shipping','coupon_condition','coupon_number','order','order_status'));
 
 	}
+
+	public function history(Request $request){
+		if(!Session::get('customer_id')){
+			return redirect('/login-checkout')->with('error','Vui lòng đăng nhập để xem lịch sử mua hàng');
+		}else{
+
+		$category_news = CateNews::orderBy('cate_news_id', 'DESC')->get();
+
+        $slider = Slider::orderBy('slider_id','DESC')->where('slider_status','1')->take(4)->get();
+
+        $cate_product = DB::table('tbl_category_product')->where('category_status','0')->orderby('category_id','desc')->get(); 
+        $brand_product = DB::table('tbl_brand')->where('brand_status','0')->orderby('brand_id','desc')->get(); 
+		$getorder = Order::where('customer_id', Session::get('customer_id'))
+                 ->where('order_status', 2)
+                 ->orderby('order_id', 'DESC')
+                 ->get();
+
+
+    	return view('pages.history.history')->with('category',$cate_product)->with('brand',$brand_product)
+        ->with('slider',$slider)->with('category_news', $category_news)->with('getorder',$getorder);
+		}
+	}
+
+	public function view_history_order(Request $request, $order_code){
+		if(!Session::get('customer_id')){
+			return redirect('/login-checkout')->with('error','Vui lòng đăng nhập để xem lịch sử mua hàng');
+		}else{
+
+		$category_news = CateNews::orderBy('cate_news_id', 'DESC')->get();
+
+        $slider = Slider::orderBy('slider_id','DESC')->where('slider_status','1')->take(4)->get();
+
+        $cate_product = DB::table('tbl_category_product')->where('category_status','0')->orderby('category_id','desc')->get(); 
+        $brand_product = DB::table('tbl_brand')->where('brand_status','0')->orderby('brand_id','desc')->get(); 
+
+		//xem lịch sử đơn hàng
+		$order_details = OrderDetails::with('product')->where('order_code',$order_code)->get();
+		$getorder = Order::where('order_code',$order_code)->first();
+
+			$customer_id = $getorder->customer_id;
+			$shipping_id = $getorder->shipping_id;
+			$order_status = $getorder->order_status;
+
+		$customer = Customer::where('customer_id',$customer_id)->first();
+		$shipping = Shipping::where('shipping_id',$shipping_id)->first();
+
+		$order_details_product = OrderDetails::with('product')->where('order_code', $order_code)->get();
+
+		foreach($order_details_product as $key => $order_d){
+
+			$product_coupon = $order_d->product_coupon;
+		}
+		if($product_coupon != 'no'){
+			$coupon = Coupon::where('coupon_code',$product_coupon)->first();
+			$coupon_condition = $coupon->coupon_condition;
+			$coupon_number = $coupon->coupon_number;
+		}else{
+			$coupon_condition = 2;
+			$coupon_number = 0;
+		}
+
+    	return view('pages.history.view_history_order')->with('category',$cate_product)->with('brand',$brand_product)
+        ->with('slider',$slider)->with('category_news', $category_news)->with('order_details', $order_details)
+		->with('customer', $customer)->with('shipping', $shipping)->with('coupon_condition', $coupon_condition)
+		->with('coupon_number', $coupon_number)->with('getorder', $getorder)->with('order_status', $order_status)->with('order_details_product', $order_details_product);
+		}
+	}
+	
 }

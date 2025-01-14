@@ -21,40 +21,45 @@ class CartController extends Controller
 
     public function check_coupon(Request $request){
         $data = $request->all();
-        $coupon = Coupon::where('coupon_code',$data['coupon'])->first();
-        if($coupon){
+        $coupon = Coupon::where('coupon_code', $data['coupon'])->first();
+        $total = Session::get('cart') ? array_sum(array_map(function($cart) {
+            return $cart['product_price'] * $cart['product_qty'];
+        }, Session::get('cart'))) : 0;
+    
+        if ($total < 200000) {
+            return redirect()->back()->with('error', 'Tổng tiền của đơn hàng phải lớn hơn 200,000 VNĐ để áp dụng mã giảm giá.');
+        }
+    
+        if ($coupon) {
             $count_coupon = $coupon->count();
-            if($count_coupon>0){
+            if ($count_coupon > 0) {
                 $coupon_session = Session::get('coupon');
-                if($coupon_session==true){
+                if ($coupon_session == true) {
                     $is_avaiable = 0;
-                    if($is_avaiable==0){
+                    if ($is_avaiable == 0) {
                         $cou[] = array(
                             'coupon_code' => $coupon->coupon_code,
                             'coupon_condition' => $coupon->coupon_condition,
                             'coupon_number' => $coupon->coupon_number,
-
                         );
-                        Session::put('coupon',$cou);
+                        Session::put('coupon', $cou);
                     }
-                }else{
+                } else {
                     $cou[] = array(
-                            'coupon_code' => $coupon->coupon_code,
-                            'coupon_condition' => $coupon->coupon_condition,
-                            'coupon_number' => $coupon->coupon_number,
-
-                        );
-                    Session::put('coupon',$cou);
+                        'coupon_code' => $coupon->coupon_code,
+                        'coupon_condition' => $coupon->coupon_condition,
+                        'coupon_number' => $coupon->coupon_number,
+                    );
+                    Session::put('coupon', $cou);
                 }
                 Session::save();
-                return redirect()->back()->with('message','Thêm mã giảm giá thành công');
+                return redirect()->back()->with('message', 'Thêm mã giảm giá thành công');
             }
-
-        }else{
-            return redirect()->back()->with('error','Mã giảm giá không đúng');
+        } else {
+            return redirect()->back()->with('error', 'Mã giảm giá không đúng');
         }
-    }  
-
+    }
+    
     public function gio_hang(Request $request){
 
     $category_news = CateNews::orderBy('cate_news_id', 'DESC')->get();

@@ -120,6 +120,7 @@
 										<td>
 											<input type="submit" value="Cập nhật giỏ hàng" name="update_qty" class="btn btn-default check_out">
 											<td><a class="btn btn-default check_out" href="{{url('/delete-all-product')}}">Xóa tất cả</a></td>
+											
 										</td>
 
 										<td>
@@ -135,33 +136,38 @@
 										</td> -->
 
 										<td colspan="2">
-											<li>Tổng tiền hàng: <span>{{number_format($total,0,',','.')}}đ</span></li>
+										<div style="margin-left:304px;font-size: 24px;color: #6abc3a;">Tổng tiền: <span>{{number_format($total,0,',','.')}}đ</span></div>
 											<!-- <li>Thuế <span></span></li>
 											<li>Phí vận chuyển <span>Free</span></li> -->
 											@if(Session::get('coupon'))		
-											<li>						
+												<li>						
 													@foreach(Session::get('coupon') as $key => $cou)
-														@if($cou['coupon_condition']==1)
-															Mã giảm: {{$cou['coupon_number']}}%
-															<p>
-																@php 
-																$total_coupon = ($total*$cou['coupon_number'])/100;
-																echo '<p><li>Tiền mã giảm: '.number_format($total_coupon,0,',','.').'đ</li></p>';
-																@endphp
-															</p>
-															<p><li>Tổng thanh toán: {{number_format($total-$total_coupon,0,',','.')}}đ</li></p>
-														@elseif($cou['coupon_condition']==2)
-															Mã giảm: {{number_format($cou['coupon_number'],0,',','.')}}k
-															<p>
-																@php 
-																$total_coupon = $total - $cou['coupon_number'];
-												
-																@endphp
-															</p>
-															<p><li>Tổng thanh toán: {{number_format($total_coupon,0,',','.')}}đ</li></p>
+														@if($total < 200000)
+															<p style="color: red;">Tổng tiền của đơn hàng phải lớn hơn 200,000 VNĐ để áp dụng mã giảm giá.</p>
+														@else
+															@if($cou['coupon_condition'] == 1)
+																Mã giảm: {{$cou['coupon_number']}}%
+																<p>
+																	@php 
+																	$total_coupon = ($total * $cou['coupon_number']) / 100;
+																	echo '<p><li>Tiền mã giảm: ' . number_format($total_coupon, 0, ',', '.') . 'đ</li></p>';
+																	@endphp
+																</p>
+																<p><li>Tổng thanh toán: {{number_format($total - $total_coupon, 0, ',', '.')}}đ</li></p>
+															@elseif($cou['coupon_condition'] == 2)
+																Mã giảm: {{number_format($cou['coupon_number'], 0, ',', '.')}}k
+																<p>
+																	@php 
+																	$total_coupon = $total - $cou['coupon_number'];
+																	@endphp
+																</p>
+																<p><li>Tổng thanh toán: {{number_format($total_coupon, 0, ',', '.')}}đ</li></p>
+															@endif
 														@endif
 													@endforeach
-												@endif
+												</li>
+											@endif
+
 										</td>
 										</li>
 										</td>
@@ -182,8 +188,22 @@
 									<td>
 										<form method="POST" action="{{url('/check-coupon')}}">
 											@csrf
+											<div style="display: flex; align-items: center; gap: -2px;">
+												<input type="submit" class="btn btn-default check_coupon" name="check_coupon" value="Áp dụng mã giảm giá">                      	
 												<input type="text" class="form-control" name="coupon" placeholder="Nhập mã giảm giá"><br>
-												<input type="submit" class="btn btn-default check_coupon" name="check_coupon" value="Tính mã giảm giá">                      	
+											</div>
+											<p style="color: red; font-size: 20px; font-weight: bold; font-style: italic; margin-top: 17px;">
+												Voucher giảm giá 20% khi nhập mã "DON200K"
+											</p>
+											<p style="color: #6abc3a; font-size: 14px; font-weight: bold; font-style: italic;">
+												(Áp dụng cho đơn hàng trên 200.000 vnđ)</p>
+										</form>
+									</td>
+									<td>
+										<form action="{{url('/vnpay-payment')}}" method="POST">
+											@csrf
+											<input type="hidden" name="total_vnpay" value="{{$total}}">
+											<button style="margin-bottom: 104px;" type="submit" class="btn btn-default check_out" name="redirect">Thanh Toán VNPay</button>
 										</form>
 									</td>
 								</tr>

@@ -1,64 +1,62 @@
-<!--A Design by W3layouts
-Author: W3layout
-Author URL: http://w3layouts.com
-License: Creative Commons Attribution 3.0 Unported
-License URL: http://creativecommons.org/licenses/by/3.0/
--->
 <!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Trang Quản Lý Admin</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="keywords" content="Visitors Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
-Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
-<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
-<!-- bootstrap-css -->
-<link rel="stylesheet" href="/assets/backend/css/bootstrap.min.css" >
-<!-- //bootstrap-css -->
-<!-- Custom CSS -->
-<link href="/assets/backend/css/style.css" rel='stylesheet' type='text/css' />
-<link href="/assets/backend/css/style-responsive.css" rel="stylesheet"/>
-<!-- font CSS -->
-<link href='//fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
-<!-- font-awesome icons -->
-<link rel="stylesheet" href="/assets/backend/css/font.css" type="text/css"/>
-<link href="/assets/backend/css/font-awesome.css" rel="stylesheet"> 
-<!-- //font-awesome icons -->
-<script src="assets/backend/js/jquery2.0.3.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .login-container h2 {
+            margin-bottom: 20px;
+        }
+        .text-alert {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-<div class="log-w3">
-<div class="w3layouts-main">
-	<h2>Đăng nhập</h2>
-	<?php
-
-use Illuminate\Support\Facades\Session;
-	
-	$message = Session::get('message');
-	if($message){	
-		echo '<span class="text-alert">' .$message. '</span>';
-		Session::put('message', null);
-	}
-	?>
-		<form action="{{URL::to('/admin-dashboard')}}" method="post">
-			{{ csrf_field()}}
-			<input type="text" class="ggg" name="admin_email" placeholder="Nhập email" required="">
-			<input type="password" class="ggg" name="admin_password" placeholder="Nhập password" required="">
-
-			<span><input type="checkbox" />Ghi nhớ đăng nhập</span>
-			<h6><a href="#">Quên mật khẩu ?</a></h6>
-				<div class="clearfix"></div>
-				<input type="submit" value="Đăng nhập" name="login">
-		</form>
-		<!--<p>Don't Have an Account ?<a href="registration.html">Create an account</a></p>-->
-</div>
-</div>
-<script src="assets/backend/js/bootstrap.js"></script>
-<script src="assets/backend/js/jquery.dcjqaccordion.2.7.js"></script>
-<script src="assets/backend/js/scripts.js"></script>
-<script src="assets/backend/js/jquery.slimscroll.js"></script>
-<script src="assets/backend/js/jquery.nicescroll.js"></script>
-<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="js/flot-chart/excanvas.min.js"></script><![endif]-->
-<script src="assets/backend/js/jquery.scrollTo.js"></script>
+    <div class="container">
+        <div class="login-container">
+            <h2 class="text-center">Admin Login</h2>
+            <?php
+                use Illuminate\Support\Facades\Session;
+                $message = Session::get('message');
+                if($message){    
+                    echo '<span class="text-alert">' .$message. '</span>';
+                    Session::put('message', null);
+                }
+            ?>
+            <form action="{{URL::to('/admin-dashboard')}}" method="post">
+                {{ csrf_field()}}
+                <div class="form-group">
+                    <label for="admin_email">Email</label>
+                    <input type="email" class="form-control" id="admin_email" name="admin_email" placeholder="Nhập email" required>
+                </div>
+                <div class="form-group">
+                    <label for="admin_password">Password</label>
+                    <input type="password" class="form-control" id="admin_password" name="admin_password" placeholder="Nhập password" required>
+                </div>
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="remember_me">
+                    <label class="form-check-label" for="remember_me">Ghi nhớ đăng nhập</label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+                <div class="text-center mt-3">
+                    <a href="#">Quên mật khẩu?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

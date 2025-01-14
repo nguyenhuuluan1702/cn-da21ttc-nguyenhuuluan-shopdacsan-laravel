@@ -242,6 +242,20 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!-- morris JavaScript -->	
 
 <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lắng nghe sự kiện nhập giá vốn
+        document.getElementById('product_von').addEventListener('input', function() {
+            const von = parseFloat(this.value) || 0; // Lấy giá vốn
+            const price = Math.round(von * 1.3); // Tính giá bán và làm tròn
+            document.getElementById('product_price').value = price; // Cập nhật giá bán
+        });
+    });
+</script>
+
+
+
+
+<script type="text/javascript">
 $(function() {
     $("#datepicker").datepicker({
         prevText: "Tháng trước",
@@ -259,6 +273,7 @@ $(function() {
     });
 });
 </script>
+
 
 <script type="text/javascript">
    $(document).ready(function() {

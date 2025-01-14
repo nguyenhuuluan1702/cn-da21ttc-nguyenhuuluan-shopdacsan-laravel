@@ -49,7 +49,7 @@
             <td>@if($ord->order_status==1)
                     Đơn hàng mới
                 @else 
-                    Đã xử lý - Đã giao hàng
+                    Đã xử lý
                 @endif
             </td>
            

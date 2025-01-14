@@ -28,6 +28,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         view()->composer('*', function($view) {
+
+            $news_footer = News::where('cate_news_id', 6)->get();
+
             $min_price = Product::min('product_price');
             $max_price = Product::max('product_price');
         
@@ -46,7 +49,8 @@ class AppServiceProvider extends ServiceProvider
                  ->with('product_dem', $product_dem)
                  ->with('news_dem', $news_dem)
                  ->with('order_dem', $order_dem)
-                 ->with('customer_dem', $customer_dem);
+                 ->with('customer_dem', $customer_dem)
+                 ->with('news_footer', $news_footer);
         });
         
     }

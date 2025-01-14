@@ -36,8 +36,28 @@
 						<div class="col-sm-7">
 							<div style="padding-bottom: 0px;" class="product-information"><!--/product-information-->
 								<img src="images/product-details/new.jpg" class="newarrival" alt="" />
+								<div style="margin-bottom: -30px;">
 								<h2>{{$value->product_name}}</h2>
+                                <ul class="list-inline rating" title="Average Rating">
+										@for($count=1; $count<=5; $count++)
+											@php
+												if($count<=$rating){
+													$color = 'color:#ffcc00;';
+												}
+												else{
+                                                    $color = 'color:#ccc;';
+                                                }
+											@endphp
+
+										<li title="star_rating" id="{{$value->product_id}}-{{$count}}"
+										data-index="{{$count}}" data-product_id="{{$value->product_id}}" 
+										data-rating="{{$rating}}" class="rating" style="cursor:pointer; {{$color}} font-size:30px;">&#9733;
+										</li>
+										@endfor
+
+									</ul>
 								<p>Mã ID: {{$value->product_id}}</p>
+                                </div>
 								<img src="images/product-details/rating.png" alt="" />
 								
 								<form action="{{URL::to('/save-cart')}}" method="POST">
@@ -53,11 +73,11 @@
 								<span>
 									<span>{{number_format($value->product_price,0,',','.').'VNĐ'}}</span>
 								
-									<label>Số lượng:</label>
-									<input name="qty" type="number" min="1" class="cart_product_qty_{{$value->product_id}}"  value="1" />
+									<!-- <label>Số lượng:</label>
+									<input name="qty" type="number" min="1" class="cart_product_qty_{{$value->product_id}}"  value="1" /> -->
 									<input name="productid_hidden" type="hidden"  value="{{$value->product_id}}" />
 								</span>
-								<input type="button" value="Thêm giỏ hàng" class="btn btn-primary btn-sm add-to-cart" data-id_product="{{$value->product_id}}" name="add-to-cart">
+								<input type="button" value="Thêm giỏ hàng" class="btn btn-primary2 btn-sm add-to-cart" data-id_product="{{$value->product_id}}" name="add-to-cart">
 								</form>
 
 								<p><b>Tình trạng:</b> Còn hàng</p>
@@ -120,7 +140,7 @@
 										
 									</form>
 
-									<p><b>Đánh giá sao</b></p>
+									<!-- <p><b>Đánh giá sao</b></p>
 
 									<ul class="list-inline rating" title="Average Rating">
 										@for($count=1; $count<=5; $count++)
@@ -149,11 +169,10 @@
 										</span>
 										<textarea name="comment" class="comment_content" placeholder="Nội dung bình luận" ></textarea>
 										<div id="notify_comment">
-										<!-- <b>Đánh giá sao: </b> <img src="images/product-details/rating.png" alt="" /> -->
 										<button type="button" class="btn btn-default pull-right send-comment">
 											Gửi bình luận
 										</button>
-									</form>
+									</form> -->
 								</div>
 							</div>
 							
@@ -172,7 +191,7 @@
 											 <div class="single-products">
 		                                        <div class="productinfo text-center">
 		                                            <img src="{{URL::to('public/uploads/product/'.$lienquan->product_image)}}" alt="" />
-		                                            <h2>{{number_format($lienquan->product_price).' '.'VNĐ'}}</h2>
+		                                            <h2>{{number_format($lienquan->product_price).' '.' VNĐ'}}</h2>
 		                                            <p>{{$lienquan->product_name}}</p>
 		                                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Thêm giỏ hàng</a>
 		                                        </div>
